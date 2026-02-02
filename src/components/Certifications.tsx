@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Award, Calendar, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -21,11 +21,13 @@ function CertificationCard({
   certification, 
   isActive, 
   index, 
+  currentIndex,
   total 
 }: { 
   certification: Certification
   isActive: boolean
   index: number
+  currentIndex: number
   total: number
 }) {
   const [ref, inView] = useInView({
@@ -33,75 +35,70 @@ function CertificationCard({
     triggerOnce: true,
   })
 
-  const cardAngle = (index - Math.floor(total / 2)) * 15
-  const cardZ = isActive ? 100 : Math.abs(index - Math.floor(total / 2)) * -20
+  // Calculate if this card is in the center position
+  const isCenterCard = index === currentIndex
+  const isLeftCard = index === (currentIndex - 1 + total) % total
+  const isRightCard = index === (currentIndex + 1) % total
 
   return (
     <motion.div
       ref={ref}
-      className="absolute inset-0 flex items-center justify-center"
-      style={{
-        transform: `rotateY(${cardAngle}deg) translateZ(${cardZ}px)`,
-        transformStyle: 'preserve-3d'
-      }}
-      animate={{
-        rotateY: isActive ? 0 : cardAngle,
-        translateZ: isActive ? 100 : cardZ,
-        scale: isActive ? 1.1 : 0.9
+      className={`w-full max-w-md mx-auto transition-all duration-500 ${
+        isCenterCard ? 'opacity-100 scale-100 z-20' : 
+        isLeftCard || isRightCard ? 'opacity-80 scale-95 z-10' : 
+        'opacity-50 scale-90 z-0'
+      }`}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ 
+        opacity: isCenterCard ? 1 : isLeftCard || isRightCard ? 0.8 : 0.5,
+        y: isCenterCard ? 0 : 20,
+        scale: isCenterCard ? 1 : isLeftCard || isRightCard ? 0.95 : 0.9,
+        zIndex: isCenterCard ? 20 : isLeftCard || isRightCard ? 10 : 0
       }}
       transition={{ 
-        duration: 0.6, 
+        duration: 0.6,
         type: "spring",
         stiffness: 300,
         damping: 30
       }}
     >
       <motion.div
-        className="glass-morphism rounded-xl p-8 w-full max-w-md h-full max-h-[600px] overflow-hidden cursor-pointer"
+        className="bg-black/90 backdrop-blur-lg border-2 border-yellow-400/30 rounded-2xl p-8 h-full cursor-pointer"
         whileHover={{ 
           y: -10,
+          borderColor: 'rgba(251, 191, 36, 0.6)',
           transition: { duration: 0.3 }
         }}
-        initial={{ opacity: 0, rotateY: 180 }}
-        animate={{ 
-          opacity: inView ? 1 : 0, 
-          rotateY: inView ? 0 : 180 
-        }}
-        transition={{ 
-          duration: 0.8, 
-          delay: index * 0.1,
-          type: "spring",
-          stiffness: 100
-        }}
+        whileTap={{ scale: 0.98 }}
       >
         {/* Certificate Header */}
         <div className="flex items-start justify-between mb-6">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
-              <Award className="w-5 h-5 text-neon-cyan" />
-              <span className="px-3 py-1 bg-gradient-to-r from-neon-cyan/20 to-neon-blue/20 text-neon-cyan rounded-full text-xs font-space font-semibold">
+              <Award className="w-5 h-5 text-yellow-400" />
+              <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 rounded-full text-xs font-bold uppercase">
                 {certification.category}
               </span>
             </div>
-            <h3 className="font-space text-xl font-bold text-white mb-2">
+            <h3 className="text-xl font-bold text-yellow-400 mb-2">
               {certification.title}
             </h3>
-            <p className="font-inter text-neon-blue font-semibold mb-2">
+            <p className="text-yellow-200 font-semibold mb-2">
               {certification.issuer}
             </p>
-            <div className="flex items-center gap-2 text-gray-400 text-sm">
+            <div className="flex items-center gap-2 text-yellow-300 text-sm">
               <Calendar className="w-4 h-4" />
               <span>{certification.date}</span>
             </div>
           </div>
         </div>
 
-        {/* Certificate Image */}
-        <div className="relative mb-6 rounded-lg overflow-hidden bg-dark-secondary/50 h-48 flex items-center justify-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10"></div>
-          <Award className="w-16 h-16 text-neon-cyan/50" />
+        {/* Certificate Image Placeholder */}
+        <div className="relative mb-6 rounded-lg overflow-hidden bg-yellow-400/5 border border-yellow-400/20 h-48 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-yellow-600/10"></div>
+          <Award className="w-16 h-16 text-yellow-400/30" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-space text-2xl font-bold text-neon-cyan/30">
+            <span className="text-2xl font-bold text-yellow-400/20">
               {certification.issuer.split(' ').map(word => word[0]).join('').toUpperCase()}
             </span>
           </div>
@@ -109,14 +106,14 @@ function CertificationCard({
 
         {/* Skills */}
         <div className="mb-6">
-          <h4 className="font-space text-sm font-semibold text-gray-400 mb-3">
+          <h4 className="text-sm font-semibold text-yellow-300 mb-3">
             Key Skills
           </h4>
           <div className="flex flex-wrap gap-2">
             {certification.skills.map((skill) => (
               <span
                 key={skill}
-                className="px-3 py-1 bg-neon-purple/20 text-neon-purple rounded-full text-xs font-inter"
+                className="px-3 py-1 bg-yellow-400/20 text-yellow-400 rounded-full text-xs font-medium border border-yellow-400/30"
               >
                 {skill}
               </span>
@@ -127,8 +124,8 @@ function CertificationCard({
         {/* Credential ID */}
         {certification.credentialId && (
           <div className="mb-4">
-            <p className="font-inter text-xs text-gray-400">
-              Credential ID: <span className="text-neon-cyan">{certification.credentialId}</span>
+            <p className="text-xs text-yellow-300">
+              Credential ID: <span className="text-yellow-400 font-mono">{certification.credentialId}</span>
             </p>
           </div>
         )}
@@ -139,18 +136,18 @@ function CertificationCard({
             href={certification.credentialUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full glass-morphism px-4 py-3 rounded-lg text-center text-neon-cyan border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full bg-yellow-400/10 border-2 border-yellow-400/50 px-4 py-3 rounded-lg text-center text-yellow-400 hover:bg-yellow-400/20 hover:border-yellow-400 transition-all duration-300 flex items-center justify-center gap-2 font-semibold"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <ExternalLink size={16} />
-            <span className="text-sm font-inter font-semibold">View Certificate</span>
+            <span className="text-sm">View Certificate</span>
           </motion.a>
         )}
 
-        {/* Glow Effect */}
+        {/* Active Glow Effect */}
         {isActive && (
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-neon-cyan/20 via-neon-purple/20 to-neon-blue/20 opacity-50 pointer-events-none"></div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-400/10 via-yellow-300/10 to-yellow-400/10 pointer-events-none"></div>
         )}
       </motion.div>
     </motion.div>
@@ -169,13 +166,12 @@ function CarouselControls({
   onNext: () => void
 }) {
   return (
-    <div className="flex items-center justify-center gap-4 mt-8">
+    <div className="flex items-center justify-center gap-6 mt-8">
       <motion.button
         onClick={onPrevious}
-        className="glass-morphism p-3 rounded-full text-neon-cyan border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
+        className="bg-black/80 backdrop-blur-lg border-2 border-yellow-400/50 p-3 rounded-full text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/10 transition-all duration-300"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        disabled={currentIndex === 0}
       >
         <ChevronLeft size={20} />
       </motion.button>
@@ -184,10 +180,10 @@ function CarouselControls({
         {Array.from({ length: total }).map((_, index) => (
           <motion.div
             key={index}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`h-2 rounded-full transition-all duration-300 ${
               index === currentIndex 
-                ? 'bg-neon-cyan w-8' 
-                : 'bg-neon-cyan/30'
+                ? 'bg-yellow-400 w-8' 
+                : 'bg-yellow-400/30 w-2'
             }`}
             whileHover={{ scale: 1.2 }}
           />
@@ -196,10 +192,9 @@ function CarouselControls({
 
       <motion.button
         onClick={onNext}
-        className="glass-morphism p-3 rounded-full text-neon-cyan border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
+        className="bg-black/80 backdrop-blur-lg border-2 border-yellow-400/50 p-3 rounded-full text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/10 transition-all duration-300"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        disabled={currentIndex === total - 1}
       >
         <ChevronRight size={20} />
       </motion.button>
@@ -210,6 +205,7 @@ function CarouselControls({
 export default function Certifications() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const sectionRef = useRef<HTMLElement>(null)
+  const autoScrollRef = useRef<NodeJS.Timeout>()
   
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -218,6 +214,44 @@ export default function Certifications() {
 
   const y = useTransform(scrollYProgress, [0, 1], [-50, 50])
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    const startAutoScroll = () => {
+      autoScrollRef.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % certifications.length)
+      }, 4000) // Auto-scroll every 4 seconds
+    }
+
+    startAutoScroll()
+
+    // Pause auto-scroll on hover
+    const handleMouseEnter = () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current)
+      }
+    }
+
+    const handleMouseLeave = () => {
+      startAutoScroll()
+    }
+
+    const carouselElement = document.querySelector('#certifications-carousel')
+    if (carouselElement) {
+      carouselElement.addEventListener('mouseenter', handleMouseEnter)
+      carouselElement.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    return () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current)
+      }
+      if (carouselElement) {
+        carouselElement.removeEventListener('mouseenter', handleMouseEnter)
+        carouselElement.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [])
 
   const certifications: Certification[] = [
     {
@@ -289,28 +323,54 @@ export default function Certifications() {
   ]
 
   const handlePrevious = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1))
+    // Pause auto-scroll temporarily
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current)
+    }
+    setCurrentIndex((prev) => (prev - 1 + certifications.length) % certifications.length)
+    // Resume auto-scroll after 10 seconds
+    setTimeout(() => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current)
+      }
+      autoScrollRef.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % certifications.length)
+      }, 4000)
+    }, 10000)
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(certifications.length - 1, prev + 1))
+    // Pause auto-scroll temporarily
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current)
+    }
+    setCurrentIndex((prev) => (prev + 1) % certifications.length)
+    // Resume auto-scroll after 10 seconds
+    setTimeout(() => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current)
+      }
+      autoScrollRef.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % certifications.length)
+      }, 4000)
+    }, 10000)
   }
 
-  const visibleCertifications = certifications.slice(
-    Math.max(0, currentIndex - 1),
-    Math.min(certifications.length, currentIndex + 2)
-  )
+  // Create infinite loop by duplicating certifications multiple times for true infinity
+  const infiniteCertifications = [...certifications, ...certifications, ...certifications, ...certifications, ...certifications]
+  const adjustedIndex = currentIndex + (certifications.length * 2) // Start from the middle set
 
   return (
     <section 
       ref={sectionRef}
       id="certifications" 
-      className="relative min-h-screen py-20 px-4 overflow-hidden"
+      className="relative min-h-screen py-20 px-4 overflow-hidden bg-black"
     >
       {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-32 left-32 w-72 h-72 bg-neon-purple/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-32 right-32 w-96 h-96 bg-neon-cyan/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-yellow-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-200/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <motion.div 
@@ -325,24 +385,34 @@ export default function Certifications() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-gradient glow-text">
-            CREDENTIALS
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-blue mx-auto rounded-full"></div>
+          <div className="flex flex-col items-center">
+            <h2 className="font-bold text-5xl md:text-6xl mb-4 text-yellow-400 text-center">
+              Certifications & Credentials
+            </h2>
+            <p className="text-lg text-yellow-200 mb-6 max-w-2xl mx-auto text-center">
+              Professional certifications and credentials that validate my expertise and commitment to continuous learning
+            </p>
+            <div className="w-32 h-1 bg-yellow-400 mx-auto rounded-full"></div>
+          </div>
         </motion.div>
 
-        {/* 3D Carousel */}
-        <div className="relative h-[600px] mb-8" style={{ perspective: '1200px' }}>
-          <div className="relative w-full h-full" style={{ transformStyle: 'preserve-3d' }}>
-            {certifications.map((certification, index) => (
-              <CertificationCard
-                key={certification.id}
-                certification={certification}
-                isActive={index === currentIndex}
-                index={index}
-                total={certifications.length}
-              />
-            ))}
+        {/* Dynamic Carousel */}
+        <div id="certifications-carousel" className="relative max-w-6xl mx-auto mb-12">
+          <div className="overflow-hidden">
+            <div className="flex transition-transform duration-500 ease-in-out gap-6" 
+                 style={{ transform: `translateX(-${adjustedIndex * 33.333}%)` }}>
+              {infiniteCertifications.map((certification, index) => (
+                <div key={`${certification.id}-${index}`} className="w-full md:w-1/3 flex-shrink-0">
+                  <CertificationCard
+                    certification={certification}
+                    isActive={index % certifications.length === currentIndex}
+                    index={index % certifications.length}
+                    currentIndex={currentIndex}
+                    total={certifications.length}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -363,21 +433,25 @@ export default function Certifications() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           {[
-            { number: '6', label: 'Total Certifications', color: 'neon-cyan' },
-            { number: '3', label: 'Technical Skills', color: 'neon-blue' },
-            { number: '2', label: 'Professional Courses', color: 'neon-purple' },
-            { number: '1', label: 'Industry Internship', color: 'neon-green' }
+            { number: '6', label: 'Total Certifications' },
+            { number: '4', label: 'Technical Skills' },
+            { number: '2', label: 'Professional Courses' },
+            { number: '1', label: 'Industry Internship' }
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
-              className="glass-morphism p-6 rounded-xl text-center card-hover"
-              whileHover={{ scale: 1.05, y: -5 }}
+              className="bg-black/80 backdrop-blur-lg border-2 border-yellow-400/30 rounded-2xl p-6 text-center"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -5,
+                borderColor: 'rgba(251, 191, 36, 0.6)'
+              }}
               transition={{ duration: 0.3 }}
             >
-              <div className={`font-orbitron text-3xl md:text-4xl font-bold text-gradient mb-2 bg-gradient-to-r from-${stat.color} to-neon-purple`}>
+              <div className="text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
                 {stat.number}
               </div>
-              <div className="font-inter text-sm text-gray-400">
+              <div className="text-sm text-yellow-200">
                 {stat.label}
               </div>
             </motion.div>
@@ -395,7 +469,7 @@ export default function Certifications() {
             href="https://linkedin.com/in/akshay-raj-367"
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-morphism px-8 py-4 rounded-full font-semibold text-neon-cyan border border-neon-cyan hover:bg-neon-cyan hover:text-dark-primary transition-all duration-300 inline-flex items-center gap-3"
+            className="bg-yellow-400/10 border-2 border-yellow-400/50 px-8 py-4 rounded-full font-semibold text-yellow-400 hover:bg-yellow-400/20 hover:border-yellow-400 transition-all duration-300 inline-flex items-center gap-3"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

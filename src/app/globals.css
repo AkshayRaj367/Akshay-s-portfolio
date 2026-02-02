@@ -43,6 +43,51 @@
   }
 }
 
+/* Custom Cursor Styles - Handled by CustomCursor.css */
+/* Default cursor will be hidden by the custom cursor component */
+
+/* Enhanced button hover effects */
+.magnetic-button {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.magnetic-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Loading animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Blob morphing animation */
+@keyframes blob {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+}
+
+.blob {
+  animation: blob 8s ease-in-out infinite;
+}
+
 @layer components {
   .glass-morphism {
     background: rgba(255, 255, 255, 0.1);

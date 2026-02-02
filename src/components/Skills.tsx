@@ -3,6 +3,7 @@
 import { useState, useRef, Suspense } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { MultiRowTechCarousel } from './InfiniteCarousel'
 
 interface SkillNode {
   name: string
@@ -12,15 +13,15 @@ interface SkillNode {
   icon?: string
 }
 
-// Category color gradients
+// Category color gradients - Updated to yellow/black theme
 const categoryColors = {
-  'All': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  'Programming': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  'Web Development': 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
-  'AI/ML': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-  'Cloud & DevOps': 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-  '3D Development': 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-  'Tools': 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+  'All': 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)',
+  'Programming': 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)',
+  'Web Development': 'linear-gradient(135deg, #FCD34D 0%, #FBBF24 100%)',
+  'AI/ML': 'linear-gradient(135deg, #FDE047 0%, #FACC15 100%)',
+  'Cloud & DevOps': 'linear-gradient(135deg, #FDE68A 0%, #FCD34D 100%)',
+  '3D Development': 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+  'Tools': 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
 }
 
 interface SkillCardProps {
@@ -63,23 +64,18 @@ function SkillCard({ skill, index, isSelected, onClick, categoryColor }: SkillCa
       }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`relative bg-white/90 backdrop-blur-lg border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
-        isSelected ? 'border-purple-400 shadow-[0_12px_40px_rgba(168,85,247,0.3)]' : 'border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.08)]'
+      className={`relative bg-black/90 backdrop-blur-lg border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
+        isSelected ? 'border-yellow-400 shadow-[0_12px_40px_rgba(251,191,36,0.3)]' : 'border-yellow-400/50 shadow-[0_4px_20px_rgba(0,0,0,0.3)]'
       }`}
-      style={{
-        borderColor: isSelected ? undefined : undefined,
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%)'
-      }}
     >
       {/* Header Row */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           {/* Skill Icon */}
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" 
-               style={{ background: categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools'] }}>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-black font-bold text-sm bg-yellow-400">
             {skill.name.charAt(0)}
           </div>
-          <h3 className="font-bold text-gray-800 text-lg">
+          <h3 className="font-bold text-yellow-400 text-lg">
             {skill.name}
           </h3>
         </div>
@@ -96,14 +92,14 @@ function SkillCard({ skill, index, isSelected, onClick, categoryColor }: SkillCa
       {/* Proficiency Display */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-600 font-medium">Proficiency</span>
-          <span className="text-lg font-bold text-gray-800">{skill.level}%</span>
+          <span className="text-sm text-yellow-200 font-medium">Proficiency</span>
+          <span className="text-lg font-bold text-yellow-400">{skill.level}%</span>
         </div>
         
         {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-yellow-400/30">
           <motion.div
-            className="h-full rounded-full relative"
+            className="h-full rounded-full relative bg-yellow-400"
             style={{ 
               background: categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools']
             }}
@@ -112,7 +108,7 @@ function SkillCard({ skill, index, isSelected, onClick, categoryColor }: SkillCa
             transition={{ duration: 1, delay: index * 0.1 + 0.5, ease: "easeOut" }}
           >
             {/* Shimmer Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/50 to-transparent animate-pulse"></div>
           </motion.div>
         </div>
       </div>
@@ -124,7 +120,7 @@ function SkillCard({ skill, index, isSelected, onClick, categoryColor }: SkillCa
           style={{
             background: `${categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools']}20`,
             borderColor: categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools'],
-            color: '#64748b'
+            color: '#FBBF24'
           }}
         >
           {skill.category}
@@ -150,17 +146,9 @@ function CategoryTabs({
           key={category}
           className={`px-6 py-3 rounded-full font-bold transition-all duration-300 ${
             activeCategory === category
-              ? 'text-white shadow-lg transform scale-105'
-              : 'bg-white/80 backdrop-blur text-gray-700 border-2 hover:transform hover:scale-105'
+              ? 'bg-yellow-400 text-black shadow-lg transform scale-105'
+              : 'bg-black/80 backdrop-blur text-yellow-400 border-2 border-yellow-400/50 hover:transform hover:scale-105'
           }`}
-          style={{
-            background: activeCategory === category 
-              ? categoryColors[category as keyof typeof categoryColors] || categoryColors['Tools']
-              : undefined,
-            borderColor: activeCategory !== category 
-              ? categoryColors[category as keyof typeof categoryColors]?.split(',')[0]?.replace('135deg, ', '') || '#667eea'
-              : undefined
-          }}
           onClick={() => onCategoryChange(category)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -246,16 +234,13 @@ export default function Skills() {
     <section 
       ref={sectionRef}
       id="skills" 
-      className="relative min-h-screen py-20 px-4 overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
-      }}
+      className="relative min-h-screen py-20 px-4 overflow-hidden bg-black"
     >
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-purple-200/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-20 left-20 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-yellow-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-200/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <motion.div 
@@ -270,13 +255,13 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-bold text-5xl md:text-6xl mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="font-bold text-5xl md:text-6xl mb-4 text-yellow-400">
             Skills & Expertise
           </h2>
-          <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+          <p className="text-lg text-yellow-200 mb-6 max-w-2xl mx-auto">
             A comprehensive overview of my technical skills and proficiency levels across various domains
           </p>
-          <div className="w-32 h-1 bg-gradient-to-r from-purple-400 to-blue-400 mx-auto rounded-full"></div>
+          <div className="w-32 h-1 bg-yellow-400 mx-auto rounded-full"></div>
         </motion.div>
 
         {/* Category Tabs */}
@@ -285,6 +270,20 @@ export default function Skills() {
           activeCategory={activeCategory}
           onCategoryChange={setActiveCategory}
         />
+
+        {/* Tech Stack Carousel */}
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          <h3 className="text-2xl font-bold text-center mb-8 text-yellow-400">
+            Tech Stack
+          </h3>
+          <MultiRowTechCarousel />
+        </motion.div>
 
         {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -308,25 +307,25 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-gray-200">
-            <div className="text-3xl font-bold text-purple-600 mb-2">{allSkills.length}</div>
-            <div className="text-gray-600">Total Skills</div>
+          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
+            <div className="text-3xl font-bold text-yellow-400 mb-2">{allSkills.length}</div>
+            <div className="text-yellow-200">Total Skills</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-gray-200">
-            <div className="text-3xl font-bold text-blue-600 mb-2">{categories.length - 1}</div>
-            <div className="text-gray-600">Categories</div>
+          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
+            <div className="text-3xl font-bold text-yellow-400 mb-2">{categories.length - 1}</div>
+            <div className="text-yellow-200">Categories</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-gray-200">
-            <div className="text-3xl font-bold text-green-600 mb-2">
+          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
+            <div className="text-3xl font-bold text-yellow-400 mb-2">
               {Math.round(allSkills.reduce((acc, skill) => acc + skill.level, 0) / allSkills.length)}%
             </div>
-            <div className="text-gray-600">Avg. Proficiency</div>
+            <div className="text-yellow-200">Avg. Proficiency</div>
           </div>
-          <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-gray-200">
-            <div className="text-3xl font-bold text-orange-600 mb-2">
+          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
+            <div className="text-3xl font-bold text-yellow-400 mb-2">
               {allSkills.filter(skill => skill.level >= 85).length}
             </div>
-            <div className="text-gray-600">Expert Skills</div>
+            <div className="text-yellow-200">Expert Skills</div>
           </div>
         </motion.div>
       </motion.div>
