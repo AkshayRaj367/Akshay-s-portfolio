@@ -3,7 +3,6 @@
 import { useState, useRef, Suspense } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { MultiRowTechCarousel } from './InfiniteCarousel'
 
 interface SkillNode {
   name: string
@@ -39,10 +38,11 @@ function SkillCard({ skill, index, isSelected, onClick, categoryColor }: SkillCa
   })
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 30, scale: 0.9 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
+      scale: 1,
       transition: {
         delay: i * 0.1,
         duration: 0.6,
@@ -59,73 +59,135 @@ function SkillCard({ skill, index, isSelected, onClick, categoryColor }: SkillCa
       animate="visible"
       custom={index}
       whileHover={{ 
-        y: -8,
+        y: -12,
+        scale: 1.05,
+        rotateY: 5,
         transition: { duration: 0.3, ease: "easeOut" }
       }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`relative bg-black/90 backdrop-blur-lg border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 ${
-        isSelected ? 'border-yellow-400 shadow-[0_12px_40px_rgba(251,191,36,0.3)]' : 'border-yellow-400/50 shadow-[0_4px_20px_rgba(0,0,0,0.3)]'
+      className={`relative bg-black/90 backdrop-blur-lg border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 overflow-hidden group ${
+        isSelected 
+          ? 'border-yellow-400 shadow-[0_20px_60px_rgba(251,191,36,0.4)]' 
+          : 'border-yellow-400/50 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_rgba(251,191,36,0.2)]'
       }`}
     >
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 via-transparent to-purple-400/5"></div>
+        <motion.div
+          className="absolute top-0 right-0 w-20 h-20 bg-yellow-400/10 rounded-full blur-xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ duration: 3, repeat: Infinity }}
+        />
+      </div>
+
       {/* Header Row */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 relative z-10">
         <div className="flex items-center gap-3">
-          {/* Skill Icon */}
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-black font-bold text-sm bg-yellow-400">
+          {/* Animated Skill Icon */}
+          <motion.div 
+            className="w-10 h-10 rounded-full flex items-center justify-center text-black font-bold text-sm bg-yellow-400 shadow-lg"
+            whileHover={{ rotate: 360, scale: 1.1 }}
+            transition={{ duration: 0.5 }}
+          >
             {skill.name.charAt(0)}
+          </motion.div>
+          <div>
+            <h3 className="font-bold text-yellow-400 text-lg">
+              {skill.name}
+            </h3>
+            <p className="text-xs text-yellow-300/70">{skill.category}</p>
           </div>
-          <h3 className="font-bold text-yellow-400 text-lg">
-            {skill.name}
-          </h3>
         </div>
-        {/* Status Indicator */}
-        <div 
-          className="w-3 h-3 rounded-full shadow-sm"
+        {/* Animated Status Indicator */}
+        <motion.div 
+          className="w-4 h-4 rounded-full shadow-sm relative"
           style={{ 
             backgroundColor: skill.color,
-            boxShadow: `0 0 8px ${skill.color}40`
+            boxShadow: `0 0 12px ${skill.color}60`
           }}
-        ></div>
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.8, 1, 0.8]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="absolute inset-0 rounded-full animate-ping" style={{ backgroundColor: skill.color, opacity: 0.3 }}></div>
+        </motion.div>
       </div>
       
-      {/* Proficiency Display */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
+      {/* Enhanced Proficiency Display */}
+      <div className="mb-4 relative z-10">
+        <div className="flex justify-between items-center mb-3">
           <span className="text-sm text-yellow-200 font-medium">Proficiency</span>
-          <span className="text-lg font-bold text-yellow-400">{skill.level}%</span>
+          <motion.span 
+            className="text-xl font-bold text-yellow-400"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.1 + 0.8, duration: 0.5 }}
+          >
+            {skill.level}%
+          </motion.span>
         </div>
         
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-yellow-400/30">
+        {/* Enhanced Progress Bar */}
+        <div className="w-full bg-gray-900 rounded-full h-3 overflow-hidden border border-yellow-400/30 relative">
           <motion.div
-            className="h-full rounded-full relative bg-yellow-400"
+            className="h-full rounded-full relative"
             style={{ 
               background: categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools']
             }}
             initial={{ width: 0 }}
             animate={{ width: inView ? `${skill.level}%` : 0 }}
-            transition={{ duration: 1, delay: index * 0.1 + 0.5, ease: "easeOut" }}
+            transition={{ duration: 1.2, delay: index * 0.1 + 0.5, ease: "easeOut" }}
           >
-            {/* Shimmer Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/50 to-transparent animate-pulse"></div>
+            {/* Multiple Shimmer Effects */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/60 to-transparent animate-pulse"></div>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
+            />
+            {/* Progress Glow */}
+            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/30 rounded-full blur-sm"></div>
           </motion.div>
         </div>
       </div>
       
-      {/* Category Badge */}
-      <div className="inline-block">
-        <span 
-          className="px-3 py-1 rounded-full text-xs font-medium border"
+      {/* Enhanced Category Badge */}
+      <div className="inline-block relative z-10">
+        <motion.span 
+          className="px-4 py-2 rounded-full text-xs font-bold border relative overflow-hidden"
           style={{
             background: `${categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools']}20`,
             borderColor: categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools'],
             color: '#FBBF24'
           }}
+          whileHover={{ scale: 1.05 }}
         >
-          {skill.category}
-        </span>
+          <span className="relative z-10">{skill.category}</span>
+          <motion.div
+            className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity"
+            style={{
+              background: categoryColors[skill.category as keyof typeof categoryColors] || categoryColors['Tools']
+            }}
+          />
+        </motion.span>
       </div>
+
+      {/* Hover Effect Overlay */}
+      {isSelected && (
+        <motion.div
+          className="absolute inset-0 bg-yellow-400/10 rounded-2xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+      )}
     </motion.div>
   )
 }
@@ -144,22 +206,52 @@ function CategoryTabs({
       {categories.map((category, index) => (
         <motion.button
           key={category}
-          className={`px-6 py-3 rounded-full font-bold transition-all duration-300 ${
+          className={`relative px-6 py-3 rounded-full font-bold transition-all duration-300 overflow-hidden group ${
             activeCategory === category
               ? 'bg-yellow-400 text-black shadow-lg transform scale-105'
               : 'bg-black/80 backdrop-blur text-yellow-400 border-2 border-yellow-400/50 hover:transform hover:scale-105'
           }`}
           onClick={() => onCategoryChange(category)}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: index * 0.1, duration: 0.5 }}
           whileHover={{ 
-            y: -2,
+            y: -3,
             transition: { duration: 0.2 }
           }}
           whileTap={{ scale: 0.95 }}
         >
-          {category}
+          {/* Animated Background for Active Tab */}
+          {activeCategory === category && (
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-500"
+              initial={{ x: '-100%' }}
+              animate={{ x: '0%' }}
+              transition={{ duration: 0.5 }}
+            />
+          )}
+          
+          {/* Hover Background */}
+          {activeCategory !== category && (
+            <motion.div
+              className="absolute inset-0 bg-yellow-400/10"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            />
+          )}
+          
+          <span className="relative z-10">{category}</span>
+          
+          {/* Active Indicator */}
+          {activeCategory === category && (
+            <motion.div
+              className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-yellow-600 rounded-full"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.3 }}
+            />
+          )}
         </motion.button>
       ))}
     </div>
@@ -236,18 +328,65 @@ export default function Skills() {
       id="skills" 
       className="relative min-h-screen py-20 px-4 overflow-hidden bg-black"
     >
-      {/* Background Decorative Elements */}
+      {/* Enhanced Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-yellow-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-200/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        {/* Animated Gradient Orbs */}
+        <motion.div
+          className="absolute top-20 left-20 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            x: [0, 50, 0],
+            y: [0, -30, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-yellow-300/10 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            x: [0, -40, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-200/5 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.4, 1],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        {/* Floating Particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-yellow-400/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              x: [0, Math.random() * 100 - 50, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 5 + Math.random() * 5,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
       </div>
 
       <motion.div 
         className="max-w-7xl mx-auto relative z-10"
         style={{ y, opacity }}
       >
-        {/* Section Title */}
+        {/* Enhanced Section Title */}
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 50 }}
@@ -255,13 +394,38 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-bold text-5xl md:text-6xl mb-4 text-yellow-400">
+          <motion.h2 
+            className="font-bold text-5xl md:text-6xl mb-4 text-yellow-400 relative"
+            whileHover={{ scale: 1.05 }}
+          >
             Skills & Expertise
-          </h2>
-          <p className="text-lg text-yellow-200 mb-6 max-w-2xl mx-auto">
+            <motion.div
+              className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-yellow-400"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            />
+          </motion.h2>
+          <motion.p 
+            className="text-lg text-yellow-200 mb-6 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
             A comprehensive overview of my technical skills and proficiency levels across various domains
-          </p>
-          <div className="w-32 h-1 bg-yellow-400 mx-auto rounded-full"></div>
+          </motion.p>
+          <motion.div 
+            className="w-32 h-1 bg-yellow-400 mx-auto rounded-full relative overflow-hidden"
+            initial={{ width: 0 }}
+            whileInView={{ width: 128 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
         </motion.div>
 
         {/* Category Tabs */}
@@ -282,7 +446,9 @@ export default function Skills() {
           <h3 className="text-2xl font-bold text-center mb-8 text-yellow-400">
             Tech Stack
           </h3>
-          <MultiRowTechCarousel />
+          <div className="text-center text-white/60">
+            Tech stack carousel component coming soon...
+          </div>
         </motion.div>
 
         {/* Skills Grid */}
@@ -299,7 +465,7 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Stats Summary */}
+        {/* Enhanced Stats Summary */}
         <motion.div
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
           initial={{ opacity: 0, y: 30 }}
@@ -307,26 +473,117 @@ export default function Skills() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
-            <div className="text-3xl font-bold text-yellow-400 mb-2">{allSkills.length}</div>
-            <div className="text-yellow-200">Total Skills</div>
-          </div>
-          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
-            <div className="text-3xl font-bold text-yellow-400 mb-2">{categories.length - 1}</div>
-            <div className="text-yellow-200">Categories</div>
-          </div>
-          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
-            <div className="text-3xl font-bold text-yellow-400 mb-2">
+          <motion.div 
+            className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30 relative overflow-hidden group"
+            whileHover={{ 
+              y: -5, 
+              scale: 1.05,
+              borderColor: '#facc15'
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Hover Background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+            
+            <motion.div 
+              className="text-3xl font-bold text-yellow-400 mb-2 relative z-10"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.5, type: "spring" }}
+            >
+              {allSkills.length}
+            </motion.div>
+            <div className="text-yellow-200 relative z-10">Total Skills</div>
+          </motion.div>
+          
+          <motion.div 
+            className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30 relative overflow-hidden group"
+            whileHover={{ 
+              y: -5, 
+              scale: 1.05,
+              borderColor: '#facc15'
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Hover Background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+            
+            <motion.div 
+              className="text-3xl font-bold text-yellow-400 mb-2 relative z-10"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              transition={{ delay: 0.7, duration: 0.5, type: "spring" }}
+            >
+              {categories.length - 1}
+            </motion.div>
+            <div className="text-yellow-200 relative z-10">Categories</div>
+          </motion.div>
+          
+          <motion.div 
+            className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30 relative overflow-hidden group"
+            whileHover={{ 
+              y: -5, 
+              scale: 1.05,
+              borderColor: '#facc15'
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Hover Background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+            
+            <motion.div 
+              className="text-3xl font-bold text-yellow-400 mb-2 relative z-10"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              transition={{ delay: 0.8, duration: 0.5, type: "spring" }}
+            >
               {Math.round(allSkills.reduce((acc, skill) => acc + skill.level, 0) / allSkills.length)}%
-            </div>
-            <div className="text-yellow-200">Avg. Proficiency</div>
-          </div>
-          <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30">
-            <div className="text-3xl font-bold text-yellow-400 mb-2">
+            </motion.div>
+            <div className="text-yellow-200 relative z-10">Avg. Proficiency</div>
+          </motion.div>
+          
+          <motion.div 
+            className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 text-center border border-yellow-400/30 relative overflow-hidden group"
+            whileHover={{ 
+              y: -5, 
+              scale: 1.05,
+              borderColor: '#facc15'
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Hover Background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent"
+              initial={{ opacity: 0 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+            
+            <motion.div 
+              className="text-3xl font-bold text-yellow-400 mb-2 relative z-10"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              transition={{ delay: 0.9, duration: 0.5, type: "spring" }}
+            >
               {allSkills.filter(skill => skill.level >= 85).length}
-            </div>
-            <div className="text-yellow-200">Expert Skills</div>
-          </div>
+            </motion.div>
+            <div className="text-yellow-200 relative z-10">Expert Skills</div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>

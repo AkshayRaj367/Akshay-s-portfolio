@@ -3,6 +3,52 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { useInView as useInViewHook } from 'react-intersection-observer'
+import ProfileCard from './ProfileCard'
+
+const techStackItems = [
+  {
+    name: 'React',
+    title: 'React',
+    image: '', // Empty string since we're using text now
+    description: 'Frontend framework for building user interfaces',
+    link: 'https://reactjs.org/'
+  },
+  {
+    name: 'Node.js',
+    title: 'Node.js',
+    image: '', // Empty string since we're using text now
+    description: 'JavaScript runtime for server-side development',
+    link: 'https://nodejs.org/'
+  },
+  {
+    name: 'Python',
+    title: 'Python',
+    image: '', // Empty string since we're using text now
+    description: 'Programming language for AI/ML and backend development',
+    link: 'https://www.python.org/'
+  },
+  {
+    name: 'TypeScript',
+    title: 'TypeScript',
+    image: '', // Empty string since we're using text now
+    description: 'Typed superset of JavaScript for better code quality',
+    link: 'https://www.typescriptlang.org/'
+  },
+  {
+    name: 'Next.js',
+    title: 'Next.js',
+    image: '', // Empty string since we're using text now
+    description: 'React framework for production-ready applications',
+    link: 'https://nextjs.org/'
+  },
+  {
+    name: 'TensorFlow',
+    title: 'TensorFlow',
+    image: '', // Empty string since we're using text now
+    description: 'Machine learning framework for AI development',
+    link: 'https://www.tensorflow.org/'
+  }
+];
 
 interface AnimatedCounterProps {
   end: number
@@ -70,12 +116,12 @@ function SkillBar({ skill, level, delay }: SkillBarProps) {
   return (
     <div ref={ref} className="mb-4">
       <div className="flex justify-between mb-2">
-        <span className="font-space text-neon-cyan">{skill}</span>
-        <span className="font-inter text-neon-blue">{level}%</span>
+        <span className="font-space text-yellow-400">{skill}</span>
+        <span className="font-inter text-yellow-300">{level}%</span>
       </div>
-      <div className="w-full bg-dark-secondary rounded-full h-3 overflow-hidden">
+      <div className="w-full bg-black/50 rounded-full h-3 overflow-hidden border border-yellow-400/30">
         <motion.div
-          className="h-full bg-gradient-to-r from-neon-cyan to-neon-blue rounded-full relative overflow-hidden"
+          className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full relative overflow-hidden"
           style={{ width: `${width}%` }}
           initial={{ width: 0 }}
           animate={{ width: inView ? `${level}%` : 0 }}
@@ -145,8 +191,8 @@ export default function About() {
       id="about" 
       className="relative min-h-screen py-20 px-4 overflow-hidden"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0">
+      {/* Background Elements - REMOVED */}
+      {/* <div className="absolute inset-0">
         {techIcons.map((tech, index) => (
           <FloatingTechIcon
             key={tech}
@@ -156,7 +202,7 @@ export default function About() {
             delay={index * 0.5}
           />
         ))}
-      </div>
+      </div> */}
 
       <motion.div 
         className="max-w-6xl mx-auto relative z-10"
@@ -170,7 +216,7 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-gradient glow-text">
+          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-yellow-400 text-center">
             ABOUT ME
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-blue mx-auto rounded-full"></div>
@@ -185,23 +231,46 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="glass-morphism p-8 rounded-xl">
-              <h3 className="font-space text-2xl font-semibold text-neon-cyan mb-4">
+            <div className="bg-black/50 backdrop-blur-sm p-8 rounded-xl border border-yellow-400/20">
+              <h3 className="font-space text-2xl font-semibold text-yellow-400 mb-4">
                 Final Year BTech Student
               </h3>
-              <p className="font-inter text-gray-300 leading-relaxed mb-4">
+              <p className="font-inter text-yellow-100 leading-relaxed mb-4">
                 I am a final year Computer Science (Data Science) student at Geethanjali College 
-                of Engineering and Technology, maintaining an impressive <span className="text-neon-blue font-semibold">8.93 CGPA</span>. 
+                of Engineering and Technology, maintaining an impressive <span className="text-yellow-300 font-semibold">8.93 CGPA</span>. 
                 My passion lies at the intersection of Full Stack Development and Artificial Intelligence, 
                 where I build innovative solutions that bridge cutting-edge technology with real-world applications.
               </p>
-              <p className="font-inter text-gray-300 leading-relaxed">
-                As a Google Student Ambassador and Secretary of the Game Smiths Club, I actively contribute 
+              <p className="font-inter text-yellow-100 leading-relaxed">
+                As a Google Student Ambassador and Secretary of Game Smiths Club, I actively contribute 
                 to the tech community by conducting workshops and leading development initiatives. 
                 My experience spans from building production-ready applications to conducting AI research 
                 that achieves significant efficiency improvements.
               </p>
             </div>
+          </motion.div>
+
+          {/* Profile Card */}
+          <motion.div
+            className="flex justify-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <ProfileCard
+              name="P. MARIA BALA AKSHAY RAJ"
+              title="Full Stack Developer"
+              handle="@akshayraj"
+              status="Available for Work"
+              contactText="Contact Me"
+              showUserInfo={true}
+              showIcon={true}
+              className="max-w-md"
+              innerGradient=""
+              miniAvatarUrl=""
+              onContactClick={() => console.log('Contact clicked')}
+            />
           </motion.div>
 
           <motion.div
@@ -211,18 +280,24 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <div className="glass-morphism p-8 rounded-xl">
-              <h3 className="font-space text-2xl font-semibold text-neon-cyan mb-6">
-                Technical Expertise
+            <div className="bg-black/50 backdrop-blur-sm p-8 rounded-xl border border-yellow-400/20">
+              <h3 className="font-space text-2xl font-semibold text-yellow-400 mb-6">
+                Tech Stack
               </h3>
-              <div className="space-y-4">
-                {skills.map((skill, index) => (
-                  <SkillBar
-                    key={skill.name}
-                    skill={skill.name}
-                    level={skill.level}
-                    delay={0.8 + index * 0.1}
-                  />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {techStackItems.map((tech, index) => (
+                  <motion.div
+                    key={tech.name}
+                    className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 text-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ scale: 1.05, borderColor: '#facc15' }}
+                  >
+                    <h4 className="text-yellow-400 font-semibold mb-2">{tech.name}</h4>
+                    <p className="text-white/60 text-sm">{tech.description}</p>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -240,68 +315,162 @@ export default function About() {
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              className="glass-morphism p-6 rounded-xl text-center card-hover"
+              className="bg-black/50 backdrop-blur-sm p-6 rounded-xl text-center border border-yellow-400/20"
               whileHover={{ scale: 1.05, y: -5 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="font-orbitron text-3xl md:text-4xl font-bold text-gradient mb-2">
+              <div className="font-orbitron text-3xl md:text-4xl font-bold text-yellow-400 mb-2">
                 <AnimatedCounter 
                   end={stat.number} 
                   suffix={stat.suffix}
                   duration={2}
                 />
               </div>
-              <div className="font-inter text-sm text-gray-400">
+              <div className="font-inter text-sm text-yellow-300">
                 {stat.label}
               </div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* 3D Card Flip Section */}
+        {/* Skills & Achievements Section */}
         <motion.div
-          className="mt-16 grid md:grid-cols-3 gap-8"
+          className="mt-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          {[
-            {
-              front: "🚀 Innovation",
-              back: "Led AI research team achieving 60% storage reduction and 40% OCR improvement in smart glasses project"
-            },
-            {
-              front: "🎯 Leadership",
-              back: "Google Student Ambassador conducting workshops for 200+ students and Secretary of Game Smiths Club with 150+ members"
-            },
-            {
-              front: "💡 Problem Solver",
-              back: "Built gamified study scheduler increasing engagement by 40% and college automation platform reducing workload by 30%"
-            }
-          ].map((item, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Technical Skills Card */}
             <motion.div
-              key={index}
-              className="relative h-48 preserve-3d"
-              whileHover={{ rotateY: 180 }}
+              className="relative h-64 preserve-3d group"
+              whileHover={{ rotateY: 10, scale: 1.02 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="absolute inset-0 glass-morphism rounded-xl p-6 flex items-center justify-center backface-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-md rounded-2xl p-6 flex items-center justify-center backface-hidden border border-blue-400/30">
                 <div className="text-center">
-                  <div className="text-4xl mb-4">{item.front.split(' ')[0]}</div>
-                  <div className="font-space text-xl text-neon-cyan">{item.front.split(' ')[1]}</div>
+                  <motion.div
+                    className="text-5xl mb-3 text-blue-400"
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  >
+                    ⚡
+                  </motion.div>
+                  <h3 className="font-space text-2xl font-bold text-white mb-2">Technical Skills</h3>
+                  <p className="font-inter text-blue-200 text-sm">React, Node.js, Python, ML, NLP</p>
                 </div>
               </div>
               <div 
-                className="absolute inset-0 glass-morphism rounded-xl p-6 flex items-center justify-center"
+                className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-md rounded-2xl p-6 flex items-center justify-center border border-purple-400/30"
                 style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
               >
-                <p className="font-inter text-sm text-gray-300 text-center">
-                  {item.back}
-                </p>
+                <div className="text-center">
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    {['React', 'Node', 'Python', 'ML', 'NLP', 'Next'].map((skill, i) => (
+                      <motion.div
+                        key={skill}
+                        className="bg-white/10 rounded-lg p-2 text-center"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: i * 0.1, duration: 0.3 }}
+                      >
+                        <span className="text-xs text-purple-200">{skill}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                  <p className="font-inter text-purple-200 text-xs">Advanced proficiency in modern web technologies</p>
+                </div>
               </div>
             </motion.div>
-          ))}
+
+            {/* Experience Card */}
+            <motion.div
+              className="relative h-64 preserve-3d group"
+              whileHover={{ rotateY: -10, scale: 1.02 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-green-600/20 to-emerald-600/20 backdrop-blur-md rounded-2xl p-6 flex items-center justify-center backface-hidden border border-green-400/30">
+                <div className="text-center">
+                  <motion.div
+                    className="text-5xl mb-3 text-green-400"
+                    animate={{ rotate: [0, -15, 15, 0] }}
+                    transition={{ duration: 5, repeat: Infinity }}
+                  >
+                    🚀
+                  </motion.div>
+                  <h3 className="font-space text-2xl font-bold text-white mb-2">Experience</h3>
+                  <p className="font-inter text-green-200 text-sm">2+ Years Building Production Apps</p>
+                </div>
+              </div>
+              <div 
+                className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 to-teal-600/20 backdrop-blur-md rounded-2xl p-6 flex items-center justify-center border border-emerald-400/30"
+                style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+              >
+                <div className="text-center">
+                  <div className="space-y-2 mb-4">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-teal-200">Frontend</span>
+                      <span className="text-teal-400">Expert</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-teal-200">Backend</span>
+                      <span className="text-teal-400">Advanced</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-teal-200">ML/AI</span>
+                      <span className="text-teal-400">Proficient</span>
+                    </div>
+                  </div>
+                  <p className="font-inter text-teal-200 text-xs">Full-stack development expertise</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Innovation Card */}
+            <motion.div
+              className="relative h-64 preserve-3d group"
+              whileHover={{ rotateY: 15, scale: 1.02 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-600/20 to-red-600/20 backdrop-blur-md rounded-2xl p-6 flex items-center justify-center backface-hidden border border-orange-400/30">
+                <div className="text-center">
+                  <motion.div
+                    className="text-5xl mb-3 text-orange-400"
+                    animate={{ 
+                      scale: [1, 1.2, 1, 1.2, 1],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    💡
+                  </motion.div>
+                  <h3 className="font-space text-2xl font-bold text-white mb-2">Innovation</h3>
+                  <p className="font-inter text-orange-200 text-sm">60% Storage Reduction • 40% OCR Improvement</p>
+                </div>
+              </div>
+              <div 
+                className="absolute inset-0 bg-gradient-to-br from-red-600/20 to-pink-600/20 backdrop-blur-md rounded-2xl p-6 flex items-center justify-center border border-red-400/30"
+                style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+              >
+                <div className="text-center">
+                  <div className="space-y-3 mb-4">
+                    <motion.div
+                      className="w-16 h-16 bg-white/10 rounded-lg mx-auto flex items-center justify-center"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity }}
+                    >
+                      <span className="text-2xl">🥽</span>
+                    </motion.div>
+                    <div className="w-16 h-16 bg-white/10 rounded-lg mx-auto flex items-center justify-center">
+                      <span className="text-2xl">🧠</span>
+                    </div>
+                  </div>
+                  <p className="font-inter text-red-200 text-xs">AI research and smart glasses development</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
       </motion.div>
 

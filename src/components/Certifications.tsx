@@ -93,15 +93,38 @@ function CertificationCard({
           </div>
         </div>
 
-        {/* Certificate Image Placeholder */}
+        {/* Certificate Image */}
         <div className="relative mb-6 rounded-lg overflow-hidden bg-yellow-400/5 border border-yellow-400/20 h-48 flex items-center justify-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-yellow-600/10"></div>
-          <Award className="w-16 h-16 text-yellow-400/30" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-yellow-400/20">
-              {certification.issuer.split(' ').map(word => word[0]).join('').toUpperCase()}
-            </span>
-          </div>
+          <img 
+            src={`https://drive.google.com/thumbnail?id=${certification.credentialUrl?.match(/\/d\/([^\/]+)/)?.[1]}&sz=w400`}
+            alt={`${certification.title} Certificate`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `
+                  <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-yellow-600/10"></div>
+                  <svg class="w-16 h-16 text-yellow-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-yellow-400/20">
+                      ${certification.issuer.split(' ').map(word => word[0]).join('').toUpperCase()}
+                    </span>
+                  </div>
+                `;
+              }
+            }}
+            onLoad={(e) => {
+              // Ensure image is visible when loaded
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'block';
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-yellow-600/5 pointer-events-none"></div>
         </div>
 
         {/* Skills */}
@@ -256,47 +279,47 @@ export default function Certifications() {
   const certifications: Certification[] = [
     {
       id: '1',
+      title: 'SQL Advanced',
+      issuer: 'HackerRank',
+      date: 'October 2024',
+      credentialId: 'HR-SQL-ADV-2024-104782',
+      credentialUrl: 'https://drive.google.com/file/d/11Vyo87zrZbysacZzS_Yn2mNFfN5g3X3v/view',
+      image: '/certificates/hackerrank-sql.png',
+      category: 'technical',
+      skills: ['Advanced SQL', 'Database Design', 'Query Optimization', 'Data Analysis']
+    },
+    {
+      id: '2',
       title: 'Essential Automation Professional',
       issuer: 'Automation Anywhere',
       date: 'October 2024',
       credentialId: 'AAP-2024-104782',
-      credentialUrl: 'https://certificates.automationanywhere.com/aap-2024-104782',
+      credentialUrl: 'https://drive.google.com/file/d/12n0RNef1PUvYvfROYfMjj9N59yaStZhu/view',
       image: '/certificates/automation-anywhere.png',
       category: 'technical',
       skills: ['RPA', 'Process Automation', 'Bot Development', 'Analytics']
     },
     {
-      id: '2',
-      title: 'SQL Advanced',
-      issuer: 'HackerRank',
-      date: 'October 2024',
-      credentialId: 'HR-SQL-ADV-2024-104782',
-      credentialUrl: 'https://www.hackerrank.com/certificates/sql-advanced-104782',
-      image: '/certificates/sql-advanced.png',
-      category: 'technical',
-      skills: ['Advanced SQL', 'Database Design', 'Query Optimization', 'Data Analysis']
-    },
-    {
       id: '3',
-      title: 'Data Analytics Job Simulation',
-      issuer: 'Accenture',
-      date: 'October 2024',
-      credentialId: 'ACC-DA-2024-104782',
-      credentialUrl: 'https://certificates.accenture.com/data-analytics-104782',
-      image: '/certificates/accenture-data.png',
-      category: 'professional',
-      skills: ['Data Visualization', 'Statistical Analysis', 'Business Intelligence', 'Tableau']
-    },
-    {
-      id: '4',
       title: 'Google Analytics',
       issuer: 'Google',
       date: 'October 2024',
       credentialId: 'GA-2024-104782',
-      credentialUrl: 'https://skillshop.exceedlms.com/student/award/104782',
+      credentialUrl: 'https://drive.google.com/file/d/1hT4yjmawfsZKiDKrIJGxhds0alLtJYsW/view',
       image: '/certificates/google-analytics.png',
       category: 'technical',
       skills: ['Web Analytics', 'User Behavior', 'Conversion Tracking', 'SEO']
+    },
+    {
+      id: '4',
+      title: 'ML, NLP, PowerBI Internship',
+      issuer: 'HBIC Solutions',
+      date: 'May 2025',
+      credentialId: 'HBIC-ML-2025-104782',
+      credentialUrl: 'https://drive.google.com/file/d/1ScdOx7vr27N9RMe0tJ-j4K3xTFfiYKki/view',
+      image: '/certificates/hbic-internship.png',
+      category: 'academic',
+      skills: ['Machine Learning', 'NLP', 'Power BI', 'Data Engineering', 'Python']
     },
     {
       id: '5',
@@ -304,21 +327,21 @@ export default function Certifications() {
       issuer: 'Google Cloud',
       date: 'October 2024',
       credentialId: 'GCC-DT-2024-104782',
-      credentialUrl: 'https://www.cloudskillsboost.google/course_certificates/104782',
+      credentialUrl: 'https://drive.google.com/file/d/12n6LMvnUArC5bXiFQrLesYM3HOpHfyfS/view',
       image: '/certificates/google-cloud.png',
       category: 'professional',
       skills: ['Cloud Strategy', 'Digital Innovation', 'Change Management', 'Agile']
     },
     {
       id: '6',
-      title: 'ML, NLP, PowerBI Internship',
-      issuer: 'HBIC Solutions',
-      date: 'May 2025',
-      credentialId: 'HBIC-ML-2025-104782',
-      credentialUrl: 'https://certificates.hbic.com/ml-nlp-internship-104782',
-      image: '/certificates/hbic-internship.png',
-      category: 'academic',
-      skills: ['Machine Learning', 'NLP', 'Power BI', 'Data Engineering', 'Python']
+      title: 'MongoDB Developer',
+      issuer: 'MongoDB University',
+      date: 'October 2024',
+      credentialId: 'MDB-DEV-2024-104782',
+      credentialUrl: 'https://drive.google.com/file/d/1zOzYgd2Y4li1rdgOzAD2eO1Na-duk6_1/view',
+      image: '/certificates/mongodb.png',
+      category: 'technical',
+      skills: ['MongoDB', 'NoSQL', 'Database Design', 'Document Management']
     }
   ]
 

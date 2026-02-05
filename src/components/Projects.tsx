@@ -33,30 +33,36 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
 
   const cardVariants = {
     grid: {
-      hidden: { opacity: 0, y: 50, rotateX: -15 },
+      hidden: { 
+        opacity: 0, 
+        y: 30,
+        scale: 0.95
+      },
       visible: { 
         opacity: 1, 
         y: 0, 
-        rotateX: 0,
+        scale: 1,
         transition: { 
           duration: 0.6, 
           delay: index * 0.1,
-          type: "spring",
-          stiffness: 100
+          ease: "easeOut"
         }
       }
     },
     featured: {
-      hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100, scale: 0.8 },
+      hidden: { 
+        opacity: 0, 
+        x: index % 2 === 0 ? -30 : 30, 
+        scale: 0.95
+      },
       visible: { 
         opacity: 1, 
         x: 0, 
         scale: 1,
         transition: { 
           duration: 0.8, 
-          delay: index * 0.2,
-          type: "spring",
-          stiffness: 80
+          delay: index * 0.15,
+          ease: "easeOut"
         }
       }
     }
@@ -72,16 +78,16 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
       style={{ perspective: '1000px' }}
     >
       <motion.div
-        className="glass-morphism rounded-xl overflow-hidden h-full transition-all duration-500 cursor-pointer"
+        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden h-full transition-all duration-300 cursor-pointer"
         style={{ 
           transformStyle: 'preserve-3d',
           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
         }}
         whileHover={{ 
-          y: -10,
-          scale: 1.02,
-          transition: { duration: 0.3 }
+          y: -8,
+          transition: { duration: 0.3, ease: "easeOut" }
         }}
+        whileTap={{ scale: 0.98 }}
         onClick={() => setIsFlipped(!isFlipped)}
       >
         {/* Front of card */}
@@ -92,34 +98,42 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
           {/* Project Header */}
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
-              <h3 className="font-space text-xl font-bold text-neon-cyan mb-2">
+              <h3 className="text-xl font-bold text-white mb-2">
                 {project.title}
               </h3>
               <div className="flex flex-wrap gap-2 mb-4">
-                {project.techStack.slice(0, 3).map((tech) => (
-                  <span
+                {project.techStack.slice(0, 3).map((tech, techIndex) => (
+                  <motion.span
                     key={tech}
-                    className="px-3 py-1 bg-neon-cyan/20 text-neon-cyan rounded-full text-xs font-inter"
+                    className="px-3 py-1 bg-yellow-400/20 text-yellow-400 rounded-full text-xs font-medium border border-yellow-400/30"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: techIndex * 0.1, duration: 0.4 }}
                   >
                     {tech}
-                  </span>
+                  </motion.span>
                 ))}
                 {project.techStack.length > 3 && (
-                  <span className="px-3 py-1 bg-neon-purple/20 text-neon-purple rounded-full text-xs font-inter">
+                  <span className="px-3 py-1 bg-white/10 text-white/60 rounded-full text-xs font-medium">
                     +{project.techStack.length - 3}
                   </span>
                 )}
               </div>
             </div>
             {project.featured && (
-              <div className="px-3 py-1 bg-gradient-to-r from-neon-cyan to-neon-blue rounded-full">
-                <span className="text-xs font-space font-bold text-dark-primary">FEATURED</span>
-              </div>
+              <motion.div 
+                className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+              >
+                <span className="text-xs font-bold text-black">FEATURED</span>
+              </motion.div>
             )}
           </div>
 
           {/* Project Description */}
-          <p className="font-inter text-gray-300 mb-6 line-clamp-3">
+          <p className="text-white/70 mb-6 line-clamp-3 leading-relaxed">
             {project.description}
           </p>
 
@@ -127,11 +141,17 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
           {project.stats && (
             <div className="grid grid-cols-2 gap-4 mb-6">
               {project.stats.map((stat, statIndex) => (
-                <div key={statIndex} className="text-center">
-                  <div className="text-neon-blue font-space font-semibold text-sm">
+                <motion.div 
+                  key={statIndex} 
+                  className="text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + statIndex * 0.1, duration: 0.5 }}
+                >
+                  <div className="text-yellow-400 font-semibold text-sm">
                     {stat}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -143,13 +163,13 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 glass-morphism px-4 py-2 rounded-lg text-center text-neon-cyan border border-neon-cyan/30 hover:border-neon-cyan transition-all duration-300 flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="flex-1 bg-yellow-400 text-black px-4 py-2 rounded-lg text-center font-medium hover:bg-yellow-300 transition-colors duration-200 flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <ExternalLink size={16} />
-                <span className="text-sm font-inter">Live Demo</span>
+                <ExternalLink className="w-4 h-4" />
+                <span>Live Demo</span>
               </motion.a>
             )}
             {project.githubUrl && (
@@ -157,51 +177,68 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 glass-morphism px-4 py-2 rounded-lg text-center text-neon-purple border border-neon-purple/30 hover:border-neon-purple transition-all duration-300 flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="flex-1 bg-white/10 text-white px-4 py-2 rounded-lg text-center font-medium hover:bg-white/20 transition-colors duration-200 flex items-center justify-center gap-2 border border-white/20"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <Github size={16} />
-                <span className="text-sm font-inter">Code</span>
+                <Github className="w-4 h-4" />
+                <span>Source Code</span>
               </motion.a>
             )}
           </div>
 
           {/* Hover Effect Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-neon-cyan/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-t from-yellow-400/5 to-transparent opacity-0 pointer-events-none"
+            whileHover={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
         </div>
 
         {/* Back of card */}
         <div 
-          className="absolute inset-0 p-6 h-full glass-morphism"
+          className="absolute inset-0 p-6 h-full bg-white/5 backdrop-blur-xl border border-white/10"
           style={{ 
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)'
           }}
         >
-          <h4 className="font-space text-lg font-bold text-neon-cyan mb-4">
+          <motion.h4 
+            className="text-lg font-bold text-white mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             Full Tech Stack
-          </h4>
+          </motion.h4>
           <div className="flex flex-wrap gap-2 mb-6">
-            {project.techStack.map((tech) => (
-              <span
+            {project.techStack.map((tech, techIndex) => (
+              <motion.span
                 key={tech}
-                className="px-3 py-1 bg-gradient-to-r from-neon-cyan/20 to-neon-blue/20 text-neon-cyan rounded-full text-xs font-inter"
+                className="px-3 py-1 bg-white/10 text-white/80 rounded-full text-xs font-medium border border-white/20"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: techIndex * 0.05, duration: 0.4 }}
               >
                 {tech}
-              </span>
+              </motion.span>
             ))}
           </div>
           
-          <div className="text-center mt-auto">
-            <p className="font-inter text-gray-400 text-sm mb-4">
+          <motion.div 
+            className="text-center mt-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <p className="text-white/60 text-sm mb-4">
               Click to flip back
             </p>
-            <div className="w-12 h-12 mx-auto bg-neon-cyan/20 rounded-full flex items-center justify-center">
-              <Play size={20} className="text-neon-cyan" />
+            <div className="w-12 h-12 mx-auto bg-yellow-400/20 rounded-full flex items-center justify-center">
+              <Play size={20} className="text-yellow-400" />
             </div>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     </motion.div>
@@ -222,15 +259,15 @@ function FilterTabs({
       {categories.map((category, index) => (
         <motion.button
           key={category}
-          className={`px-6 py-3 rounded-full font-space font-semibold transition-all duration-300 ${
+          className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
             activeFilter === category
-              ? 'bg-gradient-to-r from-neon-cyan to-neon-blue text-dark-primary shadow-[0_0_20px_rgba(0,255,255,0.5)]'
-              : 'glass-morphism text-neon-cyan border border-neon-cyan/30 hover:border-neon-cyan'
+              ? 'bg-yellow-400 text-black shadow-lg'
+              : 'bg-white/10 text-white/70 hover:bg-white/20 border border-white/20'
           }`}
           onClick={() => onFilterChange(category)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
+          transition={{ delay: index * 0.1, duration: 0.5 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -274,7 +311,7 @@ export default function Projects() {
       stats: ['2000+ Website Hits', '400+ Auditorium Presentation', '150+ Members'],
       category: 'web',
       featured: true,
-      liveUrl: 'https://gamesmithsclub.vercel.app',
+      liveUrl: 'https://game-smiths-club.vercel.app',
       githubUrl: 'https://github.com/AkshayRaj367/gamesmiths-website'
     },
     {
@@ -340,30 +377,47 @@ export default function Projects() {
     <section 
       ref={sectionRef}
       id="projects" 
-      className="relative min-h-screen py-20 px-4 overflow-hidden"
+      className="relative min-h-screen py-20 px-4 bg-black"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-40 right-20 w-80 h-80 bg-neon-blue/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 left-20 w-64 h-64 bg-neon-purple/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      {/* Elegant Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle gradient orbs */}
+        <div className="absolute top-20 right-20 w-64 h-64 bg-yellow-400/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-48 h-48 bg-yellow-300/5 rounded-full blur-3xl"></div>
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="h-full w-full" style={{
+            backgroundImage: 'linear-gradient(to right, transparent 24%, rgba(250, 204, 21, 0.05) 25%, transparent 26%, transparent 74%, rgba(250, 204, 21, 0.05) 75%, transparent 76%)',
+            backgroundSize: '50px 50px'
+          }}></div>
+        </div>
       </div>
 
       <motion.div 
         className="max-w-7xl mx-auto relative z-10"
         style={{ y, opacity }}
       >
-        {/* Section Title */}
+        {/* Elegant Section Title */}
         <motion.div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-gradient glow-text">
-            PORTFOLIO SHOWCASE
+          <h2 className="text-4xl md:text-6xl font-bold mb-4 text-white">
+            Portfolio Showcase
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-blue mx-auto rounded-full"></div>
+          <p className="text-lg text-white/60 mb-6 max-w-2xl mx-auto">
+            Explore my latest projects and technical achievements
+          </p>
+          <motion.div 
+            className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-yellow-500 mx-auto rounded-full"
+            initial={{ width: 0 }}
+            whileInView={{ width: 96 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          />
         </motion.div>
 
         {/* Filter Tabs */}
