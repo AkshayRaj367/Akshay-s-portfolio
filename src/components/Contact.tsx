@@ -434,10 +434,10 @@ export default function Contact() {
           transition={{ delay: 0.8 }}
         >
           <p className="font-inter text-gray-400 text-sm">
-            © 2024 P. Maria Bala Akshay Raj. All rights reserved.
+            © 2026 P. Maria Bala Akshay Raj. All rights reserved.
           </p>
           <p className="font-inter text-gray-500 text-xs mt-2">
-            Built with Next.js, TypeScript, and lots of ☕
+            Built with Next.js, TypeScript, and lots of ☕ :)
           </p>
         </motion.div>
       </motion.div>

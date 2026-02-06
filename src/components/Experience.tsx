@@ -278,13 +278,12 @@ export default function Experience() {
     },
     {
       id: '3',
-      title: 'AI Research Team Lead',
+      title: 'AI Research ',
       organization: 'HBIC Solutions',
       role: 'Research Intern',
       period: 'May 2025 - Present',
-      description: 'Leading a 5-person AI research team focused on developing innovative machine learning solutions for real-world problems. Implementing cutting-edge algorithms and optimizing data storage.',
+      description: ' AI research team focused on developing innovative machine learning solutions for real-world problems. Implementing cutting-edge algorithms and optimizing data storage.',
       achievements: [
-        'Led team of 5 researchers',
         'Achieved 60% storage reduction',
         'Improved OCR accuracy by 40%',
         'Published research findings'
@@ -385,7 +384,7 @@ export default function Experience() {
           {[
             { number: '5', label: 'Leadership Roles', color: 'neon-cyan' },
             { number: '200+', label: 'Students Mentored', color: 'neon-purple' },
-            { number: '10+', label: 'Workshops Conducted', color: 'neon-blue' },
+            { number: '2+', label: 'Workshops Conducted', color: 'neon-blue' },
             { number: '40%', label: 'Engagement Boost', color: 'neon-green' }
           ].map((stat, index) => (
             <motion.div
@@ -394,7 +393,7 @@ export default function Experience() {
               whileHover={{ scale: 1.05, y: -5 }}
               transition={{ duration: 0.3 }}
             >
-              <div className={`font-orbitron text-3xl md:text-4xl font-bold text-gradient mb-2 bg-gradient-to-r from-${stat.color} to-neon-purple`}>
+              <div className={`font-orbitron text-3xl md:text-4xl font-bold mb-2 text-${stat.color}`}>
                 {stat.number}
               </div>
               <div className="font-inter text-sm text-gray-400">
