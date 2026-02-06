@@ -8,6 +8,7 @@ export default function PageLoader() {
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPhase, setCurrentPhase] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   const loadingPhases = [
     { icon: Code, label: 'Initializing Code', duration: 800 },
@@ -19,6 +20,8 @@ export default function PageLoader() {
   ];
 
   useEffect(() => {
+    setMounted(true);
+    
     const totalDuration = loadingPhases.reduce((acc, phase) => acc + phase.duration, 0);
     const startTime = Date.now();
     let currentPhaseIndex = 0;
@@ -73,13 +76,13 @@ export default function PageLoader() {
             </svg>
             
             {/* Floating Particles */}
-            {[...Array(20)].map((_, i) => (
+            {mounted && [...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 bg-yellow-400 rounded-full"
                 initial={{
-                  x: Math.random() * window.innerWidth,
-                  y: Math.random() * window.innerHeight,
+                  x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
                   opacity: 0
                 }}
                 animate={{

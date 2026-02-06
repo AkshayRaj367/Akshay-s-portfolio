@@ -5,8 +5,6 @@ import SmoothScroll from '@/components/SmoothScroll'
 import EnhancedNavigation from '@/components/EnhancedNavigation'
 import ScrollProgress from '@/components/ScrollProgress'
 import PageLoader from '@/components/PageLoader'
-import CursorTrail from '@/components/CursorTrail'
-import SimpleTestCursor from '@/components/SimpleTestCursor'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk' })
@@ -37,7 +35,6 @@ export default function RootLayout({
         <SmoothScroll />
         <ScrollProgress />
         <EnhancedNavigation />
-        <SimpleTestCursor />
         {children}
       </body>
     </html>

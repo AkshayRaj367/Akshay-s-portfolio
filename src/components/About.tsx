@@ -5,51 +5,6 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { useInView as useInViewHook } from 'react-intersection-observer'
 import ProfileCard from './ProfileCard'
 
-const techStackItems = [
-  {
-    name: 'React',
-    title: 'React',
-    image: '', // Empty string since we're using text now
-    description: 'Frontend framework for building user interfaces',
-    link: 'https://reactjs.org/'
-  },
-  {
-    name: 'Node.js',
-    title: 'Node.js',
-    image: '', // Empty string since we're using text now
-    description: 'JavaScript runtime for server-side development',
-    link: 'https://nodejs.org/'
-  },
-  {
-    name: 'Python',
-    title: 'Python',
-    image: '', // Empty string since we're using text now
-    description: 'Programming language for AI/ML and backend development',
-    link: 'https://www.python.org/'
-  },
-  {
-    name: 'TypeScript',
-    title: 'TypeScript',
-    image: '', // Empty string since we're using text now
-    description: 'Typed superset of JavaScript for better code quality',
-    link: 'https://www.typescriptlang.org/'
-  },
-  {
-    name: 'Next.js',
-    title: 'Next.js',
-    image: '', // Empty string since we're using text now
-    description: 'React framework for production-ready applications',
-    link: 'https://nextjs.org/'
-  },
-  {
-    name: 'TensorFlow',
-    title: 'TensorFlow',
-    image: '', // Empty string since we're using text now
-    description: 'Machine learning framework for AI development',
-    link: 'https://www.tensorflow.org/'
-  }
-];
-
 interface AnimatedCounterProps {
   end: number
   suffix?: string
@@ -271,36 +226,6 @@ export default function About() {
               miniAvatarUrl=""
               onContactClick={() => console.log('Contact clicked')}
             />
-          </motion.div>
-
-          <motion.div
-            className="space-y-6"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <div className="bg-black/50 backdrop-blur-sm p-8 rounded-xl border border-yellow-400/20">
-              <h3 className="font-space text-2xl font-semibold text-yellow-400 mb-6">
-                Tech Stack
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {techStackItems.map((tech, index) => (
-                  <motion.div
-                    key={tech.name}
-                    className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 text-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    whileHover={{ scale: 1.05, borderColor: '#facc15' }}
-                  >
-                    <h4 className="text-yellow-400 font-semibold mb-2">{tech.name}</h4>
-                    <p className="text-white/60 text-sm">{tech.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
           </motion.div>
         </div>
 

@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
+
 import './Particles.css';
 
 const defaultColors = ['#ffffff', '#ffffff', '#ffffff'];
 
-const hexToRgb = (hex: string) => {
+const hexToRgb = hex => {
   hex = hex.replace(/^#/, '');
   if (hex.length === 3) {
     hex = hex
@@ -22,7 +23,8 @@ const hexToRgb = (hex: string) => {
 const vertex = /* glsl */ `
   attribute vec3 position;
   attribute vec4 random;
-  attribute vec3 color;  
+  attribute vec3 color;
+  
   uniform mat4 modelMatrix;
   uniform mat4 viewMatrix;
   uniform mat4 projectionMatrix;
@@ -32,7 +34,8 @@ const vertex = /* glsl */ `
   uniform float uSizeRandomness;
   
   varying vec4 vRandom;
-  varying vec3 vColor;  
+  varying vec3 vColor;
+  
   void main() {
     vRandom = random;
     vColor = color;
@@ -59,11 +62,13 @@ const vertex = /* glsl */ `
 `;
 
 const fragment = /* glsl */ `
-  precision highp float;  
+  precision highp float;
+  
   uniform float uTime;
   uniform float uAlphaParticles;
   varying vec4 vRandom;
-  varying vec3 vColor;  
+  varying vec3 vColor;
+  
   void main() {
     vec2 uv = gl_PointCoord.xy;
     float d = length(uv - vec2(0.5));
