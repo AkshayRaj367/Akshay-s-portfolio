@@ -104,13 +104,14 @@ export default function Hero() {
           </motion.button>
 
           <motion.a
-            href="/resume.pdf"
-            download
+            href="https://drive.google.com/file/d/1I3ERis3vRLUb8gpe23IEuMTuQFVxDayK/view"
+            target="_blank"
+            rel="noopener noreferrer"
             className="border-2 border-yellow-400 text-yellow-400 px-8 py-3 rounded-full font-bold hover:bg-yellow-400 hover:text-black transition-all duration-300 transform hover:scale-105"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Download Resume
+            Resume
           </motion.a>
         </motion.div>
 

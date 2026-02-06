@@ -138,8 +138,9 @@ export default function Navigation() {
 
               {/* Resume Download */}
               <motion.a
-                href="/resume.pdf"
-                download
+                href="https://drive.google.com/file/d/1I3ERis3vRLUb8gpe23IEuMTuQFVxDayK/view"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2 glass-morphism rounded-lg border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300 text-neon-cyan font-inter text-sm font-medium"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -246,14 +247,15 @@ export default function Navigation() {
                   </motion.button>
 
                   <motion.a
-                    href="/resume.pdf"
-                    download
+                    href="https://drive.google.com/file/d/1I3ERis3vRLUb8gpe23IEuMTuQFVxDayK/view"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 glass-morphism rounded-lg border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300 text-neon-cyan font-inter text-sm font-medium"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     <Download className="w-4 h-4" />
-                    Download Resume
+                    Resume
                   </motion.a>
                 </div>
               </div>
