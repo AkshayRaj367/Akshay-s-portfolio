@@ -63,35 +63,51 @@ export default function PageLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}
         >
-          {/* Animated Background Grid */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 via-transparent to-yellow-600/5"></div>
-            <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(251, 191, 36, 0.1)" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
+          {/* Mosaic Background */}
+          <div className="absolute inset-0 overflow-hidden">
+            {/* Mosaic Grid Pattern */}
+            <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-0">
+              {[...Array(144)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="border border-yellow-400/10"
+                  style={{
+                    backgroundColor: `rgba(251, 191, 36, ${Math.random() * 0.05})`,
+                  }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ 
+                    opacity: [0, 0.3, 0.1], 
+                    scale: [0, 1, 0.95] 
+                  }}
+                  transition={{
+                    duration: 2 + Math.random() * 2,
+                    repeat: Infinity,
+                    delay: Math.random() * 3,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </div>
             
             {/* Floating Particles */}
-            {mounted && [...Array(20)].map((_, i) => (
+            {mounted && [...Array(30)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-1 h-1 bg-yellow-400 rounded-full"
+                className="absolute w-2 h-2 bg-yellow-400 rounded-full"
                 initial={{
                   x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
                   y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  opacity: 0
+                  opacity: 0,
+                  scale: 0
                 }}
                 animate={{
-                  y: [0, -100, -200],
-                  opacity: [0, 1, 0],
-                  scale: [0, 1, 0]
+                  y: [0, -150, -300],
+                  opacity: [0, 0.8, 0],
+                  scale: [0, 1, 0.5],
+                  rotate: [0, 180, 360]
                 }}
                 transition={{
-                  duration: 3 + Math.random() * 2,
+                  duration: 4 + Math.random() * 3,
                   repeat: Infinity,
                   delay: Math.random() * 2,
                   ease: 'easeOut'
@@ -101,132 +117,147 @@ export default function PageLoader() {
           </div>
 
           {/* Main Loading Content */}
-          <div className="relative z-10 text-center">
-            {/* Logo Animation */}
-            <motion.div
-              className="mb-12"
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ 
-                duration: 1.2, 
-                type: 'spring',
-                stiffness: 100,
-                damping: 20
-              }}
-            >
-              <div className="relative">
-                {/* Outer Ring */}
-                <motion.div
-                  className="w-32 h-32 mx-auto border-4 border-yellow-400/30 rounded-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                />
-                
-                {/* Middle Ring */}
-                <motion.div
-                  className="absolute inset-2 w-28 h-28 mx-auto border-2 border-yellow-400/50 rounded-full"
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-                />
-                
-                {/* Inner Content */}
-                <div className="absolute inset-4 w-24 h-24 mx-auto bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-                  >
-                    <Code className="w-12 h-12 text-black" />
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Phase Icons */}
-            <div className="mb-8 flex justify-center items-center gap-4">
-              {loadingPhases.map((phase, index) => {
-                const Icon = phase.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    className="relative"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{
-                      opacity: index <= currentPhase ? 1 : 0.3,
-                      scale: index === currentPhase ? 1.2 : index < currentPhase ? 1 : 0.8,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      index === currentPhase 
-                        ? 'bg-yellow-400 text-black' 
-                        : index < currentPhase 
-                          ? 'bg-yellow-400/30 text-yellow-400' 
-                          : 'bg-black/30 border border-yellow-400/20 text-yellow-400/50'
-                    }`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    {index === currentPhase && (
-                      <motion.div
-                        className="absolute -inset-2 bg-yellow-400/20 rounded-full"
-                        animate={{ scale: [1, 1.5, 1] }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                      />
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* Current Phase Text */}
-            <motion.div
-              className="mb-8 h-8"
-              key={currentPhase}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <h3 className="text-2xl font-bold text-yellow-400">
-                {loadingPhases[currentPhase].label}
-              </h3>
-            </motion.div>
-
-            {/* Progress Bar */}
-            <div className="w-80 h-2 bg-black/50 rounded-full overflow-hidden border border-yellow-400/30 mb-4">
+          <div className="relative z-10 flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              {/* Logo Animation */}
               <motion.div
-                className="h-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 rounded-full relative"
-                style={{ width: `${progress}%` }}
+                className="mb-12"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ 
+                  duration: 1.2, 
+                  type: 'spring',
+                  stiffness: 100,
+                  damping: 20
+                }}
+              >
+                <div className="relative">
+                  {/* Outer Ring */}
+                  <motion.div
+                    className="w-32 h-32 mx-auto border-4 border-yellow-400/30 rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                  />
+                  
+                  {/* Middle Ring */}
+                  <motion.div
+                    className="absolute inset-2 w-28 h-28 mx-auto border-2 border-yellow-400/50 rounded-full"
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+                  />
+                  
+                  {/* Inner Content */}
+                  <div className="absolute inset-4 w-24 h-24 mx-auto bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                    >
+                      <Code className="w-12 h-12 text-black" />
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Phase Icons */}
+              <div className="mb-8 flex justify-center items-center gap-4">
+                {loadingPhases.map((phase, index) => {
+                  const Icon = phase.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      className="relative"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{
+                        opacity: index <= currentPhase ? 1 : 0.3,
+                        scale: index === currentPhase ? 1.2 : index < currentPhase ? 1 : 0.8,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        index === currentPhase 
+                          ? 'bg-yellow-400 text-black' 
+                          : index < currentPhase 
+                            ? 'bg-yellow-400/30 text-yellow-400' 
+                            : 'bg-black/30 border border-yellow-400/20 text-yellow-400/50'
+                      }`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      {index === currentPhase && (
+                        <motion.div
+                          className="absolute -inset-2 bg-yellow-400/20 rounded-full"
+                          animate={{ scale: [1, 1.5, 1] }}
+                          transition={{ duration: 1, repeat: Infinity }}
+                        />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Current Phase Text */}
+              <motion.div
+                className="mb-8 h-8"
+                key={currentPhase}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                {/* Shimmer Effect */}
+                <h3 className="text-2xl font-bold text-yellow-400">
+                  {loadingPhases[currentPhase].label}
+                </h3>
+              </motion.div>
+
+              {/* Progress Bar */}
+              <div className="w-96 h-3 bg-black/70 rounded-full overflow-hidden border border-yellow-400/20 mb-6 mx-auto relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/10 to-transparent animate-pulse"></div>
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/60 to-transparent"
-                  animate={{ x: ['-100%', '100%'] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                />
+                  className="h-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 rounded-full relative shadow-lg shadow-yellow-400/30"
+                  style={{ width: `${progress}%` }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                  {/* Shimmer Effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                    animate={{ x: ['-200%', '200%'] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                  />
+                  {/* Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/50 to-yellow-600/50 blur-sm"></div>
+                </motion.div>
+                {/* Progress Indicator */}
+                <motion.div
+                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-yellow-400 rounded-full shadow-lg shadow-yellow-400/50 border-2 border-black"
+                  style={{ left: `calc(${progress}% - 8px)` }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                  <motion.div
+                    className="w-full h-full bg-yellow-300 rounded-full animate-ping"
+                  />
+                </motion.div>
+              </div>
+
+              {/* Progress Percentage */}
+              <motion.div
+                className="text-yellow-300 font-mono text-lg"
+                key={Math.round(progress)}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {Math.round(progress)}%
+              </motion.div>
+
+              {/* Loading Tips */}
+              <motion.div
+                className="mt-12 text-yellow-200/60 text-sm max-w-md mx-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 0.5 }}
+              >
+                <p>Building amazing experiences with cutting-edge technology...</p>
               </motion.div>
             </div>
-
-            {/* Progress Percentage */}
-            <motion.div
-              className="text-yellow-300 font-mono text-lg"
-              key={Math.round(progress)}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              {Math.round(progress)}%
-            </motion.div>
-
-            {/* Loading Tips */}
-            <motion.div
-              className="mt-12 text-yellow-200/60 text-sm max-w-md mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 0.5 }}
-            >
-              <p>Building amazing experiences with cutting-edge technology...</p>
-            </motion.div>
           </div>
 
           {/* Corner Decorations */}
