@@ -190,8 +190,8 @@ function ProjectCard({ project, index, layout = 'grid' }: ProjectCardProps) {
 
           {/* Hover Effect Overlay */}
           <motion.div 
-            className="absolute inset-0 bg-gradient-to-t from-yellow-400/5 to-transparent opacity-0 pointer-events-none"
-            whileHover={{ opacity: 1 }}
+            className="absolute inset-0 bg-gradient-to-t from-yellow-400/2 to-transparent opacity-0 pointer-events-none"
+            whileHover={{ opacity: 0.5 }}
             transition={{ duration: 0.3 }}
           />
         </div>

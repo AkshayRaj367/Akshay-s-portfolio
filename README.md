@@ -2,6 +2,67 @@
 
 A cutting-edge, futuristic portfolio website built with Next.js 14, featuring 3D animations, glassmorphism design, and smooth 60fps performance.
 
+## 🚀 Quick Start
+
+### Option 1: Automated Setup (Recommended)
+
+**Windows:**
+```bash
+setup.bat
+```
+
+**macOS/Linux:**
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+**Cross-platform (Node.js):**
+```bash
+npm run setup
+```
+
+### Option 2: Manual Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd akshay-s-portfolio
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Create environment file**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open in browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📋 Prerequisites
+
+- **Node.js** (version 16 or higher)
+- **npm** (usually comes with Node.js)
+
+Download Node.js from [https://nodejs.org/](https://nodejs.org/)
+
+## 🛠️ Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run linting
+- `npm run setup` - Run automated setup
+
 ## 🚀 Features
 
 ### **Tech Stack**
@@ -230,7 +291,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Email**: mariabala367@gmail.com
 - **Phone**: +91 7780275789
 - **GitHub**: [AkshayRaj367](https://github.com/AkshayRaj367)
-- **LinkedIn**: [Akshay Raj](https://linkedin.com/in/akshay-raj-367)
+- **LinkedIn**: [Akshay Raj](www.linkedin.com/in/akshayraj367)
 
 ---
 

@@ -179,7 +179,7 @@ export const cacheResources = async (resources: string[], cacheName: string) => 
 export const syncFormData = async (formData: any) => {
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
     const registration = await navigator.serviceWorker.ready
-    await registration.sync.register('sync-form')
+    await (registration as any).sync.register('sync-form')
     // Store form data in IndexedDB for later sync
     localStorage.setItem('pendingForm', JSON.stringify(formData))
   }

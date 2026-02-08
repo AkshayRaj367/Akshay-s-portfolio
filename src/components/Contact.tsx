@@ -228,7 +228,7 @@ function ContactInfo() {
     {
       name: 'LinkedIn',
       icon: <Linkedin className="w-5 h-5" />,
-      url: 'https://linkedin.com/in/akshay-raj-367',
+      url: 'www.linkedin.com/in/akshayraj367',
       color: '#0077b5'
     },
     {

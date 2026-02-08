@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import './ProfileCard.css';
 
-const DEFAULT_INNER_GRADIENT = 'linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)';
+const DEFAULT_INNER_GRADIENT = 'linear-gradient(145deg,#60496e8c 0%,#71C4FF44 80%)';
 
 const ANIMATION_CONFIG = {
   INITIAL_DURATION: 1200,
@@ -11,9 +11,9 @@ const ANIMATION_CONFIG = {
   ENTER_TRANSITION_MS: 180
 };
 
-const clamp = (v, min = 0, max = 100) => Math.min(Math.max(v, min), max);
-const round = (v, precision = 3) => parseFloat(v.toFixed(precision));
-const adjust = (v, fMin, fMax, tMin, tMax) => round(tMin + ((tMax - tMin) * (v - fMin)) / (fMax - fMin));
+const clamp = (v: number, min = 0, max = 100) => Math.min(Math.max(v, min), max);
+const round = (v: number, precision = 3) => parseFloat(v.toFixed(precision));
+const adjust = (v: number, fMin: number, fMax: number, tMin: number, tMax: number) => round(tMin + ((tMax - tMin) * (v - fMin)) / (fMax - fMin));
 
 interface ProfileCardProps {
   avatarUrl?: string;
@@ -59,17 +59,17 @@ const ProfileCardComponent = ({
   showUserInfo = true,
   onContactClick,
   showIcon = true
-}) => {
-  const wrapRef = useRef(null);
-  const shellRef = useRef(null);
+}: ProfileCardProps) => {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
 
-  const enterTimerRef = useRef(null);
-  const leaveRafRef = useRef(null);
+  const enterTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const leaveRafRef = useRef<number | null>(null);
 
   const tiltEngine = useMemo(() => {
     if (!enableTilt) return null;
 
-    let rafId = null;
+    let rafId: number | null = null;
     let running = false;
     let lastTs = 0;
 
@@ -82,7 +82,7 @@ const ProfileCardComponent = ({
     const INITIAL_TAU = 0.6;
     let initialUntil = 0;
 
-    const setVarsFromXY = (x, y) => {
+    const setVarsFromXY = (x: number, y: number) => {
       const shell = shellRef.current;
       if (!shell) return;
 
@@ -103,8 +103,8 @@ const ProfileCardComponent = ({
         '--pointer-from-center': `${clamp(Math.hypot(percentY - 50, percentX - 50) / 50, 0, 1)}`,
         '--pointer-from-top': `${percentY / 100}`,
         '--pointer-from-left': `${percentX / 100}`,
-        '--rotate-x': `${round(-(centerX / 5))}deg`,
-        '--rotate-y': `${round(centerY / 4)}deg` 
+        '--rotate-x': `${round(-(centerX / 12))}deg`,
+        '--rotate-y': `${round(centerY / 10)}deg` 
       };
 
       for (const [k, v] of Object.entries(properties)) {
@@ -147,12 +147,12 @@ const ProfileCardComponent = ({
     };
 
     return {
-      setImmediate(x, y) {
+      setImmediate(x: number, y: number) {
         currentX = x;
         currentY = y;
         setVarsFromXY(currentX, currentY);
       },
-      setTarget(x, y) {
+      setTarget(x: number, y: number) {
         targetX = x;
         targetY = y;
         start();
@@ -162,7 +162,7 @@ const ProfileCardComponent = ({
         if (!shell) return;
         this.setTarget(shell.clientWidth / 2, shell.clientHeight / 2);
       },
-      beginInitial(durationMs) {
+      beginInitial(durationMs: number) {
         initialUntil = performance.now() + durationMs;
         start();
       },
@@ -254,6 +254,18 @@ const ProfileCardComponent = ({
   );
 
   const handleClick = useCallback(() => {
+    console.log('Contact button clicked!');
+    
+    // Direct email link
+    const email = 'akshayraj367@gmail.com'; // Replace with your actual email
+    const subject = encodeURIComponent('Hello from Portfolio');
+    const body = encodeURIComponent('Hi Akshay,\n\nI found your portfolio and would like to connect with you.\n\nBest regards');
+    
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    
+    console.log('Opening email:', mailtoLink);
+    window.open(mailtoLink, '_blank');
+    
     onContactClick?.();
   }, [onContactClick]);
 
@@ -271,23 +283,33 @@ const ProfileCardComponent = ({
     shell.addEventListener('pointerenter', pointerEnterHandler);
     shell.addEventListener('pointermove', pointerMoveHandler);
     shell.addEventListener('pointerleave', pointerLeaveHandler);
+    shell.addEventListener('click', handleClick);
 
-    const handleClick = () => {
-      if (!enableMobileTilt || (typeof window !== 'undefined' && window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function')) {
-        const anyMotion = window.DeviceMotionEvent;
-        anyMotion
-          .requestPermission()
-          .then((state: any) => {
-            if (state === 'granted') {
-              window.addEventListener('deviceorientation', deviceOrientationHandler);
-            }
-          })
-          .catch(console.error);
+    // Setup device orientation if enabled
+    const setupDeviceOrientation = () => {
+      if (!enableMobileTilt) return;
+      
+      if (typeof window !== 'undefined' && window.DeviceMotionEvent && (window.DeviceMotionEvent as any).requestPermission) {
+        const anyMotion = window.DeviceMotionEvent as any;
+        if (typeof anyMotion.requestPermission === 'function') {
+          anyMotion
+            .requestPermission()
+            .then((state: any) => {
+              if (state === 'granted') {
+                window.addEventListener('deviceorientation', deviceOrientationHandler);
+              }
+            })
+            .catch(console.error);
+        } else {
+          window.addEventListener('deviceorientation', deviceOrientationHandler);
+        }
       } else {
         window.addEventListener('deviceorientation', deviceOrientationHandler);
       }
     };
-    shell.addEventListener('click', handleClick);
+
+    // Call setup once
+    setupDeviceOrientation();
 
     const initialX = (shell.clientWidth || 0) - ANIMATION_CONFIG.INITIAL_X_OFFSET;
     const initialY = ANIMATION_CONFIG.INITIAL_Y_OFFSET;
@@ -373,7 +395,7 @@ const ProfileCardComponent = ({
                   </div>
                   <button
                     className="pc-contact-btn"
-                    onClick={handleContactClick}
+                    onClick={handleClick}
                     style={{ pointerEvents: 'auto' }}
                     type="button"
                     aria-label={`Contact ${name || 'user'}`}

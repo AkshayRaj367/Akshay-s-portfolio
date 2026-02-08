@@ -310,37 +310,85 @@ export default function Achievements() {
     <section 
       ref={sectionRef}
       id="achievements" 
-      className="relative min-h-screen py-20 px-4 overflow-hidden"
+      className="relative min-h-screen py-24 px-4 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"
     >
-      {/* Background Effects */}
+      {/* Elegant Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 right-20 w-80 h-80 bg-neon-cyan/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        {/* Subtle gradient orbs */}
+        <div className="absolute top-32 right-32 w-96 h-96 bg-gradient-to-br from-yellow-400/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 left-32 w-80 h-80 bg-gradient-to-tr from-red-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+        
+        {/* Elegant grid pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="h-full w-full" style={{
+            backgroundImage: 'linear-gradient(to right, transparent 24%, rgba(250, 204, 21, 0.03) 25%, transparent 26%, transparent 74%, rgba(250, 204, 21, 0.03) 75%, transparent 76%)',
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+        
+        {/* Floating particles */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 15 }).map((_, index) => (
+            <motion.div
+              key={index}
+              className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 0.8, 0.3]
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <motion.div 
         className="max-w-7xl mx-auto relative z-10"
         style={{ y, opacity }}
       >
-        {/* Section Title */}
+        {/* Elegant Section Title */}
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
-          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-gradient glow-text">
-            HALL OF FAME
+          <div className="mb-6">
+            <span className="font-inter text-sm font-medium text-yellow-400/80 tracking-widest uppercase">
+              Achievements & Recognition
+            </span>
+          </div>
+          <h2 className="font-orbitron text-5xl md:text-7xl font-black mb-6 tracking-wider">
+            <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent drop-shadow-2xl">
+              HALL OF FAME
+            </span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-blue mx-auto rounded-full"></div>
+          <p className="font-inter text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+            A collection of milestones that mark the journey of innovation, perseverance, and excellence
+          </p>
+          <motion.div 
+            className="w-32 h-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mx-auto rounded-full shadow-lg shadow-yellow-400/50"
+            initial={{ width: 0, opacity: 0 }}
+            whileInView={{ width: 128, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+          />
         </motion.div>
 
         {/* Trophy Podium */}
         <TrophyPodium />
 
-        {/* Achievements Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
+        {/* Elegant Achievements Grid */}
+        <div className="grid md:grid-cols-2 gap-10 mb-10">
           {achievements.map((achievement, index) => (
             <AchievementCard
               key={achievement.id}
@@ -350,56 +398,63 @@ export default function Achievements() {
           ))}
         </div>
 
-        {/* Achievement Stats */}
+        {/* Elegant Achievement Stats */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-6"
-          initial={{ opacity: 0, y: 50 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 1, delay: 0.4 }}
         >
           {achievementStats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              className="glass-morphism p-6 rounded-xl text-center card-hover"
-              whileHover={{ scale: 1.05, y: -5 }}
+              className="glass-morphism p-8 rounded-2xl text-center border border-white/10 hover:border-yellow-400/30 transition-all duration-500"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -8,
+                boxShadow: '0 20px 40px rgba(250, 204, 21, 0.2)'
+              }}
               transition={{ duration: 0.3 }}
             >
-              <div className={`font-orbitron text-3xl md:text-4xl font-bold text-gradient mb-2 bg-gradient-to-r from-${stat.color} to-neon-purple`}>
+              <div className="font-orbitron text-4xl md:text-5xl font-black mb-3 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                 {stat.number}
               </div>
-              <div className="font-inter text-sm text-gray-400">
+              <div className="font-inter text-sm text-gray-300 font-medium">
                 {stat.label}
               </div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Call to Action */}
+        {/* Elegant Call to Action */}
         <motion.div
-          className="text-center mt-16"
+          className="text-center mt-12"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <motion.p
-            className="font-inter text-gray-400 mb-6 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.6 }}
           >
-            Every achievement represents a step towards innovation and excellence. 
-            I'm always seeking new challenges to push the boundaries of technology and create meaningful impact.
-          </motion.p>
-          <motion.button
-            className="glass-morphism px-8 py-4 rounded-full font-semibold text-neon-cyan border border-neon-cyan hover:bg-neon-cyan hover:text-dark-primary transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Let's Collaborate on Something Amazing
-          </motion.button>
+            <p className="font-inter text-gray-300 text-lg leading-relaxed mb-8">
+              Every achievement represents a step towards innovation and excellence. 
+              I'm always seeking new challenges to push the boundaries of technology and create meaningful impact.
+            </p>
+            <motion.button
+              className="group relative px-10 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full font-bold text-black text-lg shadow-xl hover:shadow-2xl transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <span className="relative z-10">Let's Collaborate on Something Amazing</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </motion.button>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>

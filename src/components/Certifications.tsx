@@ -489,7 +489,7 @@ export default function Certifications() {
           viewport={{ once: true }}
         >
           <motion.a
-            href="https://linkedin.com/in/akshay-raj-367"
+            href="www.linkedin.com/in/akshayraj367"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-yellow-400/10 border-2 border-yellow-400/50 px-8 py-4 rounded-full font-semibold text-yellow-400 hover:bg-yellow-400/20 hover:border-yellow-400 transition-all duration-300 inline-flex items-center gap-3"

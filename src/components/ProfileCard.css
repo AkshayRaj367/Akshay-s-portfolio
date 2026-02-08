@@ -178,7 +178,7 @@
 
 .pc-card:hover .pc-shine,
 .pc-card.active .pc-shine {
-  filter: brightness(0.85) contrast(1.5) saturate(0.5);
+  filter: brightness(0.55) contrast(1.55) saturate(1.55);
   animation-play-state: paused;
 }
 
@@ -211,8 +211,8 @@
     center,
     calc(var(--pointer-x) * 0.01) calc(var(--pointer-y) * 0.01);
   background-blend-mode: color-dodge;
-  filter: brightness(calc(2 - var(--pointer-from-center))) contrast(calc(var(--pointer-from-center) + 2))
-    saturate(calc(0.5 + var(--pointer-from-center)));
+  filter: brightness(calc(1.6 - var(--pointer-from-center) * 0.3)) contrast(calc(var(--pointer-from-center) + 1.2))
+    saturate(calc(0.9 + var(--pointer-from-center) * 0.2));
   mix-blend-mode: luminosity;
 }
 
@@ -226,7 +226,7 @@
     700% 700%,
     100% 100%;
   mix-blend-mode: difference;
-  filter: brightness(0.8) contrast(1.5);
+  filter: brightness(0.4) contrast(1.05);
 }
 
 .pc-glare {
@@ -234,16 +234,16 @@
   overflow: hidden;
   background-image: radial-gradient(
     farthest-corner circle at var(--pointer-x) var(--pointer-y),
-    hsl(248, 25%, 80%) 12%,
-    hsla(207, 40%, 30%, 0.8) 90%
+    hsl(248, 25%, 90%) 5%,
+    hsla(207, 40%, 40%, 0.4) 50%
   );
   mix-blend-mode: overlay;
-  filter: brightness(0.8) contrast(1.2);
+  filter: brightness(0.95) contrast(1.05);
   z-index: 4;
 }
 
 .pc-avatar-content {
-  mix-blend-mode: luminosity;
+  mix-blend-mode: normal;
   overflow: visible;
   transform: translateZ(2);
   backface-visibility: hidden;
@@ -260,6 +260,7 @@
   backface-visibility: hidden;
   will-change: transform;
   transition: transform 120ms ease-out;
+  filter: brightness(0.95) contrast(0.98);
 }
 
 .pc-avatar-content::before {
