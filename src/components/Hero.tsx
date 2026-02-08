@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import Particles from './Particles'
-import TextType from './TextType'
+import SmoothTypingText from './SmoothTypingText'
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(true)
@@ -70,20 +70,15 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
-          <TextType 
-            text={[
+          <SmoothTypingText 
+            texts={[
               "Full Stack Developer",
               "Machine Learning Engineer", 
               "AI Innovation Architect"
             ]}
-            typingSpeed={40}
-            pauseDuration={1500}
-            showCursor={true}
-            cursorCharacter="|"
-            deletingSpeed={30}
-            cursorBlinkDuration={0.3}
-            variableSpeed={false}
-            onSentenceComplete={() => {}}
+            typingSpeed={80}
+            deletingSpeed={40}
+            pauseDuration={1200}
             className="text-yellow-300"
           />
         </motion.div>
