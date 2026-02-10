@@ -188,11 +188,11 @@ export default function About() {
           >
             <div className="bg-black/50 backdrop-blur-sm p-8 rounded-xl border border-yellow-400/20">
               <h3 className="font-space text-2xl font-semibold text-yellow-400 mb-4">
-                Final Year BTech Student
+                3rd Year BTech Student
               </h3>
               <p className="font-inter text-yellow-100 leading-relaxed mb-4">
-                I am a final year Computer Science (Data Science) student at Geethanjali College 
-                of Engineering and Technology, maintaining an impressive <span className="text-yellow-300 font-semibold">8.93 CGPA</span>. 
+                I am a 3rd Computer Science (Data Science) student at Geethanjali College 
+                of Engineering and Technology, maintaining  <span className="text-yellow-300 font-semibold">8.93 CGPA</span>. 
                 My passion lies at the intersection of Full Stack Development and Artificial Intelligence, 
                 where I build innovative solutions that bridge cutting-edge technology with real-world applications.
               </p>

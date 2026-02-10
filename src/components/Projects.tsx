@@ -322,6 +322,7 @@ export default function Projects() {
       techStack: ['Python', 'OpenCV', 'PyQRCode', 'Tkinter', 'Cryptography'],
       stats: ['50% Usability Improvement', '25% Accuracy Boost', 'AES-256 Encryption'],
       category: 'tool',
+      liveUrl: 'https://kernelqr367.vercel.app',
       githubUrl: 'https://github.com/AkshayRaj367/qr-generator-scanner'
     },
     {
