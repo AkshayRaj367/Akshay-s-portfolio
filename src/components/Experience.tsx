@@ -37,18 +37,23 @@ function TimelineItem({
   const itemVariants = {
     hidden: { 
       opacity: 0, 
-      x: isLeft ? -100 : 100,
-      scale: 0.8
+      x: isLeft ? -150 : 150,
+      scale: 0.7,
+      rotateY: isLeft ? -15 : 15,
+      rotateZ: index % 2 === 0 ? -8 : 8
     },
     visible: { 
       opacity: 1, 
       x: 0,
       scale: 1,
+      rotateY: 0,
+      rotateZ: 0,
       transition: { 
-        duration: 0.8, 
-        delay: index * 0.2,
+        duration: 1.2, 
+        delay: index * 0.3,
         type: "spring",
-        stiffness: 100
+        stiffness: 70,
+        damping: 20
       }
     }
   }
@@ -59,42 +64,58 @@ function TimelineItem({
       variants={itemVariants}
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
-      className={`flex items-center mb-12 ${isLeft ? 'flex-row-reverse' : ''}`}
+      className={`flex items-center mb-16 ${isLeft ? 'flex-row-reverse' : ''}`}
     >
       {/* Content Card */}
       <motion.div
-        className="w-full md:w-5/12 glass-morphism rounded-xl p-6 cursor-pointer"
+        className="w-full md:w-5/12 glass-morphism rounded-2xl p-8 cursor-pointer border border-yellow-400/20 transition-all duration-700"
         whileHover={{ 
-          scale: 1.02,
-          y: -5,
-          transition: { duration: 0.3 }
+          scale: 1.05,
+          y: -12,
+          rotateX: 5,
+          boxShadow: '0 25px 50px rgba(251, 191, 36, 0.3)',
+          borderColor: 'rgba(251, 191, 36, 0.5)',
+          transition: { duration: 0.4 }
         }}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-10 h-10 rounded-full flex items-center justify-center"
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <motion.div 
+              className="w-12 h-12 rounded-full flex items-center justify-center border-2 border-yellow-400/30"
               style={{ backgroundColor: `${experience.color}20` }}
+              whileHover={{ 
+                scale: 1.15, 
+                rotate: 360,
+                borderColor: experience.color,
+                transition: { duration: 0.6 }
+              }}
             >
-              <div style={{ color: experience.color }}>
+              <motion.div 
+                style={{ color: experience.color }}
+                animate={{ rotate: isExpanded ? 360 : 0 }}
+                transition={{ duration: 0.8 }}
+              >
                 {experience.icon}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="px-2 py-1 bg-gradient-to-r from-neon-cyan/20 to-neon-blue/20 text-neon-cyan rounded-full text-xs font-space font-semibold">
+              <div className="flex items-center gap-3 mb-2">
+                <motion.span 
+                  className="px-3 py-1 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 text-yellow-400 rounded-full text-xs font-orbitron font-semibold border border-yellow-400/30"
+                  whileHover={{ scale: 1.05 }}
+                >
                   {experience.type}
-                </span>
+                </motion.span>
               </div>
-              <h3 className="font-space text-lg font-bold text-white">
+              <h3 className="font-orbitron text-xl font-bold text-yellow-400 mb-1">
                 {experience.title}
               </h3>
-              <p className="font-inter text-neon-blue font-semibold">
+              <p className="font-inter text-yellow-300/90 font-semibold">
                 {experience.organization}
               </p>
-              <p className="font-inter text-gray-400 text-sm">
+              <p className="font-inter text-gray-300 text-sm">
                 {experience.role}
               </p>
             </div>
@@ -102,97 +123,148 @@ function TimelineItem({
         </div>
 
         {/* Period */}
-        <div className="flex items-center gap-2 mb-4 text-gray-400 text-sm">
-          <Calendar className="w-4 h-4" />
-          <span>{experience.period}</span>
+        <div className="flex items-center gap-3 mb-6 text-gray-300 text-sm">
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          >
+            <Calendar className="w-4 h-4 text-yellow-400" />
+          </motion.div>
+          <span className="font-medium">{experience.period}</span>
         </div>
 
         {/* Description */}
         <motion.div
-          className="mb-4"
+          className="mb-6 overflow-hidden"
           initial={{ height: "auto" }}
-          animate={{ height: isExpanded ? "auto" : "3rem" }}
-          transition={{ duration: 0.3 }}
+          animate={{ height: isExpanded ? "auto" : "4rem" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         >
-          <p className="font-inter text-gray-300 text-sm leading-relaxed overflow-hidden">
+          <p className="font-inter text-gray-300 text-sm leading-relaxed">
             {experience.description}
           </p>
         </motion.div>
 
         {/* Achievements */}
         <motion.div
-          className="mb-4"
+          className="mb-6"
           initial={{ opacity: 0, height: 0 }}
           animate={{ 
             opacity: isExpanded ? 1 : 0, 
             height: isExpanded ? "auto" : 0 
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.4 }}
         >
-          <h4 className="font-space text-sm font-semibold text-neon-cyan mb-2">
+          <h4 className="font-orbitron text-sm font-semibold text-yellow-400 mb-3">
             Key Achievements
           </h4>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {experience.achievements.map((achievement, achIndex) => (
-              <div key={achIndex} className="flex items-start gap-2">
-                <ChevronRight className="w-4 h-4 text-neon-purple mt-0.5 flex-shrink-0" />
-                <span className="font-inter text-xs text-gray-400">
+              <motion.div 
+                key={achIndex} 
+                className="flex items-start gap-3"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ 
+                  opacity: isExpanded ? 1 : 0, 
+                  x: isExpanded ? 0 : -20 
+                }}
+                transition={{ delay: achIndex * 0.1 }}
+              >
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 mt-1.5 flex-shrink-0"
+                  animate={{ 
+                    scale: isExpanded ? [1, 1.3, 1] : 1,
+                    opacity: isExpanded ? [1, 0.7, 1] : 0.7
+                  }}
+                  transition={{ duration: 2, repeat: isExpanded ? Infinity : 0 }}
+                />
+                <span className="font-inter text-xs text-gray-300">
                   {achievement}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
 
         {/* Skills */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {experience.skills.slice(0, isExpanded ? experience.skills.length : 3).map((skill) => (
-            <span
+        <div className="flex flex-wrap gap-2 mb-6">
+          {experience.skills.slice(0, isExpanded ? experience.skills.length : 3).map((skill, skillIndex) => (
+            <motion.span
               key={skill}
-              className="px-2 py-1 bg-neon-purple/20 text-neon-purple rounded-full text-xs font-inter"
+              className="px-3 py-1 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 text-yellow-400 rounded-full text-xs font-orbitron border border-yellow-400/30"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: skillIndex * 0.05 }}
+              whileHover={{ scale: 1.1, borderColor: 'rgba(251, 191, 36, 0.6)' }}
             >
               {skill}
-            </span>
+            </motion.span>
           ))}
           {!isExpanded && experience.skills.length > 3 && (
-            <span className="px-2 py-1 bg-neon-cyan/20 text-neon-cyan rounded-full text-xs font-inter">
+            <motion.span 
+              className="px-3 py-1 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 text-yellow-400 rounded-full text-xs font-orbitron border border-yellow-400/30"
+              whileHover={{ scale: 1.05 }}
+            >
               +{experience.skills.length - 3}
-            </span>
+            </motion.span>
           )}
         </div>
 
         {/* Expand Indicator */}
         <div className="flex items-center justify-between">
-          <span className="font-inter text-xs text-gray-500">
+          <span className="font-inter text-xs text-gray-400">
             {isExpanded ? 'Click to collapse' : 'Click to expand'}
           </span>
           <motion.div
-            className="text-neon-cyan text-xs"
+            className="text-yellow-400 text-xs font-orbitron"
             animate={{ rotate: isExpanded ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
           >
             ↓
           </motion.div>
         </div>
+
+        {/* Enhanced Shine Effect */}
+        <motion.div 
+          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-yellow-400/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+          animate={{
+            backgroundPosition: isExpanded ? '100% 0' : '0% 0',
+          }}
+          transition={{ duration: 1.5, repeat: isExpanded ? Infinity : 0 }}
+        />
+        
+        {/* Enhanced Glow Effect */}
+        <motion.div 
+          className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-40 transition-opacity duration-700 pointer-events-none"
+          style={{ 
+            background: `linear-gradient(135deg, ${experience.color}30, transparent)`,
+            boxShadow: `0 0 40px ${experience.color}50`
+          }}
+          animate={{
+            boxShadow: isExpanded ? `0 0 60px ${experience.color}60` : `0 0 40px ${experience.color}50`
+          }}
+          transition={{ duration: 0.6 }}
+        />
       </motion.div>
 
       {/* Timeline Dot */}
       <div className="relative flex items-center justify-center w-0 md:w-2/12 px-4">
         <motion.div
-          className="w-4 h-4 bg-neon-cyan rounded-full relative z-10"
+          className="w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full relative z-10 border-2 border-yellow-400/50"
           initial={{ scale: 0 }}
           animate={{ scale: inView ? 1 : 0 }}
-          transition={{ delay: index * 0.2 + 0.5 }}
+          transition={{ delay: index * 0.3 + 0.5 }}
+          whileHover={{ scale: 1.3 }}
         >
           <motion.div
-            className="absolute inset-0 bg-neon-cyan rounded-full"
+            className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"
             animate={{ scale: [1, 1.5, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
         </motion.div>
         
         {/* Timeline Line */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent via-neon-cyan to-transparent -translate-y-1/2" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 w-px h-32 bg-gradient-to-b from-transparent via-yellow-400 to-transparent -translate-y-1/2" />
       </div>
 
       {/* Empty Space for Alternating Layout */}
@@ -210,16 +282,18 @@ function ProgressIndicator({
 }) {
   return (
     <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-20 hidden lg:block">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {Array.from({ length: totalItems }).map((_, index) => (
           <motion.div
             key={index}
-            className="w-2 h-2 rounded-full bg-neon-cyan/30"
+            className="w-3 h-3 rounded-full bg-yellow-400/30 border border-yellow-400/20"
             animate={{
-              backgroundColor: index <= currentProgress ? '#00ffff' : 'rgba(0, 255, 255, 0.3)',
-              scale: index === currentProgress ? 1.5 : 1
+              backgroundColor: index <= currentProgress ? '#fbbf24' : 'rgba(251, 191, 36, 0.3)',
+              borderColor: index <= currentProgress ? '#fbbf24' : 'rgba(251, 191, 36, 0.2)',
+              scale: index === currentProgress ? [1, 1.5, 1] : 1,
+              boxShadow: index === currentProgress ? '0 0 20px rgba(251, 191, 36, 0.6)' : 'none'
             }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
           />
         ))}
       </div>
@@ -335,30 +409,78 @@ export default function Experience() {
     <section 
       ref={sectionRef}
       id="experience" 
-      className="relative min-h-screen py-20 px-4 overflow-hidden"
+      className="relative min-h-screen py-24 px-4 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"
     >
-      {/* Background Effects */}
+      {/* Elegant Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-40 left-40 w-72 h-72 bg-neon-blue/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-40 right-40 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        {/* Subtle gradient orbs */}
+        <div className="absolute top-32 right-32 w-96 h-96 bg-gradient-to-br from-yellow-400/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 left-32 w-80 h-80 bg-gradient-to-tr from-red-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
+        
+        {/* Elegant grid pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="h-full w-full" style={{
+            backgroundImage: 'linear-gradient(to right, transparent 24%, rgba(250, 204, 21, 0.03) 25%, transparent 26%, transparent 74%, rgba(250, 204, 21, 0.03) 75%, transparent 76%)',
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+        
+        {/* Floating particles */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 15 }).map((_, index) => (
+            <motion.div
+              key={index}
+              className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 0.8, 0.3]
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <motion.div 
         className="max-w-7xl mx-auto relative z-10"
         style={{ y, opacity }}
       >
-        {/* Section Title */}
+        {/* Elegant Section Title */}
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
-          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-gradient glow-text">
-            JOURNEY
+          <div className="mb-6">
+            <span className="font-inter text-sm font-medium text-yellow-400/80 tracking-widest uppercase">
+              Professional Journey
+            </span>
+          </div>
+          <h2 className="font-orbitron text-5xl md:text-7xl font-black mb-6 tracking-wider">
+            <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent drop-shadow-2xl">
+              EXPERIENCE
+            </span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-blue mx-auto rounded-full"></div>
+          <p className="font-inter text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+            A journey through leadership roles, technical challenges, and continuous growth in the tech industry
+          </p>
+          <motion.div 
+            className="w-32 h-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mx-auto rounded-full shadow-lg shadow-yellow-400/50"
+            initial={{ width: 0, opacity: 0 }}
+            whileInView={{ width: 128, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+          />
         </motion.div>
 
         {/* Timeline */}
@@ -373,61 +495,68 @@ export default function Experience() {
           ))}
         </div>
 
-        {/* Experience Stats */}
+        {/* Elegant Experience Stats */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
-          initial={{ opacity: 0, y: 50 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20"
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 1, delay: 0.4 }}
         >
           {[
-            { number: '5', label: 'Leadership Roles', color: 'neon-cyan' },
-            { number: '200+', label: 'Students Mentored', color: 'neon-purple' },
-            { number: '2+', label: 'Workshops Conducted', color: 'neon-blue' },
-            { number: '40%', label: 'Engagement Boost', color: 'neon-green' }
+            { number: '5', label: 'Leadership Roles', color: 'yellow' },
+            { number: '200+', label: 'Students Mentored', color: 'orange' },
+            { number: '2+', label: 'Workshops Conducted', color: 'red' },
+            { number: '40%', label: 'Engagement Boost', color: 'yellow' }
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
-              className="glass-morphism p-6 rounded-xl text-center card-hover"
-              whileHover={{ scale: 1.05, y: -5 }}
+              className="glass-morphism p-8 rounded-2xl text-center border border-white/10 hover:border-yellow-400/30 transition-all duration-500"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -8,
+                boxShadow: '0 20px 40px rgba(251, 204, 21, 0.2)'
+              }}
               transition={{ duration: 0.3 }}
             >
-              <div className={`font-orbitron text-3xl md:text-4xl font-bold mb-2 text-${stat.color}`}>
+              <div className="font-orbitron text-4xl md:text-5xl font-black mb-3 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                 {stat.number}
               </div>
-              <div className="font-inter text-sm text-gray-400">
+              <div className="font-inter text-sm text-gray-300 font-medium">
                 {stat.label}
               </div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Call to Action */}
+        {/* Elegant Call to Action */}
         <motion.div
-          className="text-center mt-16"
+          className="text-center mt-20"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <motion.p
-            className="font-inter text-gray-400 mb-6 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.6 }}
           >
-            Every role and project has been a stepping stone in my journey of continuous learning and growth. 
-            I'm passionate about leveraging technology to create meaningful impact and inspire others.
-          </motion.p>
-          <motion.button
-            className="glass-morphism px-8 py-4 rounded-full font-semibold text-neon-cyan border border-neon-cyan hover:bg-neon-cyan hover:text-dark-primary transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Let's Connect and Collaborate
-          </motion.button>
+            <p className="font-inter text-gray-300 text-lg leading-relaxed mb-8">
+              Every role and project has been a stepping stone in my journey of continuous learning and growth. 
+              I'm passionate about leveraging technology to create meaningful impact and inspire others.
+            </p>
+            <motion.button
+              className="group relative px-10 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full font-bold text-black text-lg shadow-xl hover:shadow-2xl transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <span className="relative z-10">Let's Connect and Collaborate</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </motion.button>
+          </motion.div>
         </motion.div>
       </motion.div>
 

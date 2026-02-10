@@ -30,19 +30,21 @@ function AchievementCard({ achievement, index }: { achievement: Achievement; ind
       opacity: 0, 
       y: 100,
       rotateX: -15,
-      scale: 0.8
+      scale: 0.8,
+      rotateZ: index % 2 === 0 ? -5 : 5
     },
     visible: { 
       opacity: 1, 
       y: 0,
       rotateX: 0,
       scale: 1,
+      rotateZ: 0,
       transition: { 
-        duration: 0.8, 
-        delay: index * 0.15,
+        duration: 1, 
+        delay: index * 0.2,
         type: "spring",
-        stiffness: 100,
-        damping: 20
+        stiffness: 80,
+        damping: 15
       }
     }
   }
@@ -56,39 +58,57 @@ function AchievementCard({ achievement, index }: { achievement: Achievement; ind
       className="relative group"
     >
       <motion.div
-        className="glass-morphism rounded-xl p-6 h-full cursor-pointer transition-all duration-500"
+        className="glass-morphism rounded-2xl p-8 h-full cursor-pointer transition-all duration-700 border border-yellow-400/20"
         whileHover={{ 
-          y: -10,
-          scale: 1.02,
-          rotateX: 5,
-          transition: { duration: 0.3 }
+          y: -15,
+          scale: 1.03,
+          rotateX: 8,
+          boxShadow: '0 25px 50px rgba(251, 191, 36, 0.3)',
+          borderColor: 'rgba(251, 191, 36, 0.5)',
+          transition: { duration: 0.4 }
         }}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {/* Achievement Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-12 h-12 rounded-full flex items-center justify-center"
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <motion.div 
+              className="w-14 h-14 rounded-full flex items-center justify-center border-2 border-yellow-400/30"
               style={{ backgroundColor: `${achievement.color}20` }}
+              whileHover={{ 
+                scale: 1.1, 
+                rotate: 360,
+                borderColor: achievement.color,
+                transition: { duration: 0.6 }
+              }}
             >
-              <div style={{ color: achievement.color }}>
+              <motion.div 
+                style={{ color: achievement.color }}
+                animate={{ rotate: isExpanded ? 360 : 0 }}
+                transition={{ duration: 0.8 }}
+              >
                 {achievement.icon}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="px-3 py-1 bg-gradient-to-r from-neon-cyan/20 to-neon-blue/20 text-neon-cyan rounded-full text-xs font-space font-semibold">
+              <div className="flex items-center gap-3 mb-2">
+                <motion.span 
+                  className="px-4 py-1 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 text-yellow-400 rounded-full text-xs font-orbitron font-semibold border border-yellow-400/30"
+                  whileHover={{ scale: 1.05 }}
+                >
                   {achievement.category}
-                </span>
-                <span className="text-xs font-space text-neon-purple font-bold">
+                </motion.span>
+                <motion.span 
+                  className="text-xs font-orbitron text-yellow-300 font-bold"
+                  whileHover={{ scale: 1.1 }}
+                >
                   {achievement.position}
-                </span>
+                </motion.span>
               </div>
-              <h3 className="font-space text-lg font-bold text-white">
+              <h3 className="font-orbitron text-xl font-bold text-yellow-400 mb-1">
                 {achievement.title}
               </h3>
-              <p className="font-inter text-neon-blue text-sm">
+              <p className="font-inter text-yellow-300/80 text-sm">
                 {achievement.competition}
               </p>
             </div>
@@ -97,31 +117,38 @@ function AchievementCard({ achievement, index }: { achievement: Achievement; ind
 
         {/* Achievement Description */}
         <motion.div
-          className="mb-4"
+          className="mb-6 overflow-hidden"
           initial={{ height: "auto" }}
-          animate={{ height: isExpanded ? "auto" : "3rem" }}
-          transition={{ duration: 0.3 }}
+          animate={{ height: isExpanded ? "auto" : "4rem" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         >
-          <p className="font-inter text-gray-300 text-sm leading-relaxed overflow-hidden">
+          <p className="font-inter text-gray-300 text-sm leading-relaxed">
             {achievement.description}
           </p>
         </motion.div>
 
         {/* Achievement Stats */}
-        <div className="grid grid-cols-1 gap-2 mb-4">
+        <div className="grid grid-cols-1 gap-3 mb-6">
           {achievement.stats.map((stat, statIndex) => (
             <motion.div
               key={statIndex}
-              className="flex items-center gap-2"
+              className="flex items-center gap-3"
               initial={{ opacity: 0, x: -20 }}
               animate={{ 
                 opacity: isExpanded ? 1 : 0.7, 
                 x: isExpanded ? 0 : -10 
               }}
-              transition={{ delay: statIndex * 0.1 }}
+              transition={{ delay: statIndex * 0.15 }}
             >
-              <div className="w-2 h-2 rounded-full bg-neon-cyan"></div>
-              <span className="font-inter text-xs text-gray-400">
+              <motion.div 
+                className="w-3 h-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500"
+                animate={{ 
+                  scale: isExpanded ? [1, 1.2, 1] : 1,
+                  opacity: isExpanded ? [1, 0.7, 1] : 0.7
+                }}
+                transition={{ duration: 2, repeat: isExpanded ? Infinity : 0 }}
+              />
+              <span className="font-inter text-xs text-gray-300">
                 {stat}
               </span>
             </motion.div>
@@ -130,29 +157,39 @@ function AchievementCard({ achievement, index }: { achievement: Achievement; ind
 
         {/* Date */}
         <div className="flex items-center justify-between">
-          <span className="font-inter text-xs text-gray-500">
+          <span className="font-inter text-xs text-gray-400">
             {achievement.date}
           </span>
           <motion.div
-            className="text-neon-cyan text-xs font-space"
+            className="text-yellow-400 text-xs font-orbitron"
             animate={{ rotate: isExpanded ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
           >
             ↓
           </motion.div>
         </div>
 
-        {/* Shine Effect on Hover */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-        
-        {/* Glow Effect */}
-        <div 
-          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"
-          style={{ 
-            background: `linear-gradient(135deg, ${achievement.color}20, transparent)`,
-            boxShadow: `0 0 30px ${achievement.color}40`
+        {/* Enhanced Shine Effect */}
+        <motion.div 
+          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-yellow-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+          animate={{
+            backgroundPosition: isExpanded ? '100% 0' : '0% 0',
           }}
-        ></div>
+          transition={{ duration: 1.5, repeat: isExpanded ? Infinity : 0 }}
+        />
+        
+        {/* Enhanced Glow Effect */}
+        <motion.div 
+          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none"
+          style={{ 
+            background: `linear-gradient(135deg, ${achievement.color}30, transparent)`,
+            boxShadow: `0 0 40px ${achievement.color}50`
+          }}
+          animate={{
+            boxShadow: isExpanded ? `0 0 60px ${achievement.color}60` : `0 0 40px ${achievement.color}50`
+          }}
+          transition={{ duration: 0.6 }}
+        />
       </motion.div>
     </motion.div>
   )
@@ -167,67 +204,96 @@ function TrophyPodium() {
   return (
     <motion.div
       ref={ref}
-      className="relative h-64 mb-12 flex items-end justify-center"
+      className="relative h-64 mb-16 flex items-end justify-center"
       initial={{ opacity: 0, y: 100 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 1.2 }}
     >
       {/* Podium */}
-      <div className="flex items-end gap-4">
+      <div className="flex items-end gap-6">
         <motion.div
-          className="glass-morphism w-20 h-32 rounded-t-lg flex flex-col items-center justify-center"
+          className="glass-morphism w-24 h-36 rounded-t-lg flex flex-col items-center justify-center border border-yellow-400/20"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: inView ? 0 : 100, opacity: inView ? 1 : 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
+          whileHover={{ y: -10, boxShadow: '0 20px 40px rgba(251, 191, 36, 0.3)' }}
         >
-          <Medal className="w-8 h-8 text-neon-purple mb-2" />
-          <span className="font-space font-bold text-neon-purple">2nd</span>
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            <Medal className="w-10 h-10 text-yellow-300 mb-3" />
+          </motion.div>
+          <span className="font-orbitron font-bold text-yellow-300 text-lg">2nd</span>
         </motion.div>
         
         <motion.div
-          className="glass-morphism w-24 h-40 rounded-t-lg flex flex-col items-center justify-center border-2 border-neon-cyan shadow-[0_0_30px_rgba(0,255,255,0.5)]"
+          className="glass-morphism w-28 h-44 rounded-t-lg flex flex-col items-center justify-center border-2 border-yellow-400 shadow-[0_0_40px_rgba(251,191,36,0.5)]"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: inView ? 0 : 100, opacity: inView ? 1 : 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
+          whileHover={{ 
+            y: -15, 
+            scale: 1.05,
+            boxShadow: '0 30px 60px rgba(251, 191, 36, 0.6)' 
+          }}
         >
-          <Trophy className="w-10 h-10 text-neon-cyan mb-2" />
-          <span className="font-space font-bold text-neon-cyan">1st</span>
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+              scale: { duration: 2, repeat: Infinity }
+            }}
+          >
+            <Trophy className="w-12 h-12 text-yellow-400 mb-3" />
+          </motion.div>
+          <span className="font-orbitron font-bold text-yellow-400 text-xl">1st</span>
         </motion.div>
         
         <motion.div
-          className="glass-morphism w-20 h-24 rounded-t-lg flex flex-col items-center justify-center"
+          className="glass-morphism w-24 h-28 rounded-t-lg flex flex-col items-center justify-center border border-yellow-400/20"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: inView ? 0 : 100, opacity: inView ? 1 : 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
+          whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(251, 191, 36, 0.3)' }}
         >
-          <Award className="w-8 h-8 text-neon-blue mb-2" />
-          <span className="font-space font-bold text-neon-blue">3rd</span>
+          <motion.div
+            animate={{ rotate: [0, -10, 10, 0] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <Award className="w-10 h-10 text-yellow-200 mb-3" />
+          </motion.div>
+          <span className="font-orbitron font-bold text-yellow-200 text-lg">3rd</span>
         </motion.div>
       </div>
 
-      {/* Confetti Animation */}
+      {/* Enhanced Confetti Animation */}
       {inView && (
         <div className="absolute inset-0 pointer-events-none">
-          {Array.from({ length: 20 }).map((_, index) => (
+          {Array.from({ length: 30 }).map((_, index) => (
             <motion.div
               key={index}
               className="absolute w-2 h-2 rounded-full"
               style={{
-                backgroundColor: ['#00ffff', '#ff00ff', '#0080ff', '#00ff00', '#ff0080'][index % 5],
+                backgroundColor: ['#fbbf24', '#f59e0b', '#f97316', '#ea580c', '#dc2626'][index % 5],
                 left: `${Math.random() * 100}%`,
                 top: `-10px`
               }}
               animate={{
-                y: [0, 250],
-                x: [0, (Math.random() - 0.5) * 100],
-                rotate: [0, 360]
+                y: [0, 300],
+                x: [0, (Math.random() - 0.5) * 150],
+                rotate: [0, 720],
+                scale: [0, 1, 0.8, 0]
               }}
               transition={{
-                duration: 2 + Math.random() * 2,
+                duration: 3 + Math.random() * 2,
                 repeat: Infinity,
-                delay: Math.random() * 2,
-                ease: "linear"
+                delay: Math.random() * 3,
+                ease: "easeOut"
               }}
             />
           ))}
