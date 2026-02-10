@@ -67,74 +67,99 @@ function ContactForm() {
 
   return (
     <motion.div
-      className="glass-morphism rounded-xl p-8"
-      initial={{ opacity: 0, rotateX: -15 }}
-      whileInView={{ opacity: 1, rotateX: 0 }}
+      className="glass-morphism rounded-2xl p-10 border border-yellow-400/20"
+      initial={{ opacity: 0, rotateX: -15, scale: 0.9 }}
+      whileInView={{ opacity: 1, rotateX: 0, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 1, type: "spring", stiffness: 100 }}
       style={{ transformStyle: 'preserve-3d' }}
+      whileHover={{ 
+        y: -10,
+        boxShadow: '0 25px 50px rgba(251, 191, 36, 0.2)',
+        borderColor: 'rgba(251, 191, 36, 0.4)'
+      }}
     >
       {isSubmitted ? (
         <motion.div
-          className="text-center py-12"
+          className="text-center py-16"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, type: "spring" }}
         >
-          <div className="w-16 h-16 bg-neon-cyan/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Send className="w-8 h-8 text-neon-cyan" />
-          </div>
-          <h3 className="font-space text-2xl font-bold text-neon-cyan mb-2">
+          <motion.div 
+            className="w-20 h-20 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-yellow-400/30"
+            animate={{ 
+              scale: [1, 1.1, 1],
+              rotate: [0, 360]
+            }}
+            transition={{ 
+              scale: { duration: 2, repeat: Infinity },
+              rotate: { duration: 8, repeat: Infinity, ease: "linear" }
+            }}
+          >
+            <Send className="w-10 h-10 text-yellow-400" />
+          </motion.div>
+          <h3 className="font-orbitron text-3xl font-bold text-yellow-400 mb-3">
             Message Sent!
           </h3>
-          <p className="font-inter text-gray-400">
+          <p className="font-inter text-gray-300 text-lg">
             Thank you for reaching out. I'll get back to you soon!
           </p>
         </motion.div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-8">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
             >
-              <label className="block font-inter text-sm font-medium text-gray-400 mb-2">
+              <label className="block font-inter text-sm font-medium text-yellow-400/80 mb-3">
                 Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neon-cyan" />
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-yellow-400" />
+                </motion.div>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-dark-secondary/50 border border-neon-cyan/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-cyan focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300"
+                  className="w-full pl-12 pr-4 py-4 bg-black/30 border border-yellow-400/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-500"
                   placeholder="Your Name"
                 />
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
             >
-              <label className="block font-inter text-sm font-medium text-gray-400 mb-2">
+              <label className="block font-inter text-sm font-medium text-yellow-400/80 mb-3">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neon-cyan" />
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                >
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-yellow-400" />
+                </motion.div>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-dark-secondary/50 border border-neon-cyan/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-cyan focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300"
+                  className="w-full pl-12 pr-4 py-4 bg-black/30 border border-yellow-400/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-500"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -142,35 +167,40 @@ function ContactForm() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
           >
-            <label className="block font-inter text-sm font-medium text-gray-400 mb-2">
+            <label className="block font-inter text-sm font-medium text-yellow-400/80 mb-3">
               Subject
             </label>
             <div className="relative">
-              <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neon-cyan" />
-              <input
-                type="text"
-                name="subject"
-                value={formData.subject}
-                onChange={handleInputChange}
-                required
-                className="w-full pl-10 pr-4 py-3 bg-dark-secondary/50 border border-neon-cyan/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-cyan focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300"
-                placeholder="What's this about?"
-              />
-            </div>
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <MessageSquare className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-yellow-400" />
+                </motion.div>
+                <input
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full pl-12 pr-4 py-4 bg-black/30 border border-yellow-400/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-500"
+                  placeholder="What's this about?"
+                />
+              </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
           >
-            <label className="block font-inter text-sm font-medium text-gray-400 mb-2">
+            <label className="block font-inter text-sm font-medium text-yellow-400/80 mb-3">
               Message
             </label>
             <textarea
@@ -178,8 +208,8 @@ function ContactForm() {
               value={formData.message}
               onChange={handleInputChange}
               required
-              rows={5}
-              className="w-full px-4 py-3 bg-dark-secondary/50 border border-neon-cyan/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-cyan focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300 resize-none"
+              rows={6}
+              className="w-full px-4 py-4 bg-black/30 border border-yellow-400/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-500 resize-none"
               placeholder="Tell me about your project or just say hello..."
             />
           </motion.div>
@@ -187,21 +217,24 @@ function ContactForm() {
           <motion.button
             type="submit"
             disabled={isSubmitting}
-            className="w-full glass-morphism px-6 py-4 rounded-lg font-semibold text-neon-cyan border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            whileHover={{ scale: 1.02 }}
+            className="w-full group relative px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl font-bold text-black text-lg shadow-xl hover:shadow-2xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isSubmitting ? (
-              <>
-                <div className="w-5 h-5 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin" />
-                <span>Sending...</span>
-              </>
-            ) : (
-              <>
-                <Send size={20} />
-                <span>Send Message</span>
-              </>
-            )}
+            <span className="relative z-10 flex items-center justify-center gap-3">
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  <span>Sending...</span>
+                </>
+              ) : (
+                <>
+                  <Send size={20} />
+                  <span>Send Message</span>
+                </>
+              )}
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </motion.button>
         </form>
       )}
@@ -214,23 +247,23 @@ function ContactInfo() {
     {
       icon: <Mail className="w-5 h-5" />,
       label: 'Email',
-      value: 'mariabala367@gmail.com',
-      href: 'mailto:mariabala367@gmail.com',
-      color: 'neon-cyan'
+      value: 'akshay.raj.p.367@gmail.com',
+      href: 'mailto:akshay.raj.p.367@gmail.com',
+      color: '#fbbf24'
     },
     {
       icon: <Phone className="w-5 h-5" />,
       label: 'Phone',
       value: '+91 7780275789',
       href: 'tel:+917780275789',
-      color: 'neon-blue'
+      color: '#f59e0b'
     },
     {
       icon: <MapPin className="w-5 h-5" />,
       label: 'Location',
       value: 'Hyderabad, Telangana, India',
       href: 'https://maps.google.com/?q=Hyderabad,Telangana,India',
-      color: 'neon-purple'
+      color: '#f97316'
     }
   ]
 
@@ -244,7 +277,7 @@ function ContactInfo() {
     {
       name: 'LinkedIn',
       icon: <Linkedin className="w-5 h-5" />,
-      url: 'www.linkedin.com/in/akshayraj367',
+      url: 'https://www.linkedin.com/in/akshayraj367',
       color: '#0077b5'
     },
     {
@@ -256,42 +289,57 @@ function ContactInfo() {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Contact Information */}
       <motion.div
-        className="glass-morphism rounded-xl p-8"
+        className="glass-morphism rounded-2xl p-10 border border-yellow-400/20"
         initial={{ opacity: 0, x: 50 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.2 }}
+        transition={{ duration: 1, delay: 0.2 }}
+        whileHover={{ 
+          y: -10,
+          boxShadow: '0 25px 50px rgba(251, 191, 36, 0.2)',
+          borderColor: 'rgba(251, 191, 36, 0.4)'
+        }}
       >
-        <h3 className="font-space text-2xl font-bold text-neon-cyan mb-6">
+        <h3 className="font-orbitron text-2xl font-bold text-yellow-400 mb-8">
           Get in Touch
         </h3>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           {contactInfo.map((info, index) => (
             <motion.a
               key={info.label}
               href={info.href}
-              className="flex items-center gap-4 p-4 rounded-lg bg-dark-secondary/30 hover:bg-dark-secondary/50 transition-all duration-300 group"
-              initial={{ opacity: 0, x: -20 }}
+              className="flex items-center gap-4 p-5 rounded-xl bg-black/30 hover:bg-black/50 transition-all duration-500 group border border-yellow-400/10 hover:border-yellow-400/30"
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 + index * 0.1 }}
-              whileHover={{ x: 5 }}
+              transition={{ delay: 0.3 + index * 0.15 }}
+              whileHover={{ x: 8, scale: 1.02 }}
             >
-              <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center"
+              <motion.div 
+                className="w-12 h-12 rounded-full flex items-center justify-center border-2 border-yellow-400/30"
                 style={{ backgroundColor: `${info.color}20` }}
+                whileHover={{ 
+                  scale: 1.1, 
+                  rotate: 360,
+                  borderColor: info.color,
+                  transition: { duration: 0.6 }
+                }}
               >
-                <div style={{ color: info.color }}>
+                <motion.div 
+                  style={{ color: info.color }}
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                >
                   {info.icon}
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
               <div>
-                <p className="font-inter text-sm text-gray-400">{info.label}</p>
-                <p className="font-inter text-white group-hover:text-neon-cyan transition-colors duration-300">
+                <p className="font-inter text-sm text-yellow-400/80 font-medium">{info.label}</p>
+                <p className="font-inter text-white group-hover:text-yellow-400 transition-colors duration-300 font-medium">
                   {info.value}
                 </p>
               </div>
@@ -302,34 +350,47 @@ function ContactInfo() {
 
       {/* Social Links */}
       <motion.div
-        className="glass-morphism rounded-xl p-8"
+        className="glass-morphism rounded-2xl p-10 border border-yellow-400/20"
         initial={{ opacity: 0, x: 50 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+        transition={{ duration: 1, delay: 0.4 }}
+        whileHover={{ 
+          y: -10,
+          boxShadow: '0 25px 50px rgba(251, 191, 36, 0.2)',
+          borderColor: 'rgba(251, 191, 36, 0.4)'
+        }}
       >
-        <h3 className="font-space text-2xl font-bold text-neon-cyan mb-6">
+        <h3 className="font-orbitron text-2xl font-bold text-yellow-400 mb-8">
           Connect With Me
         </h3>
         
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-6">
           {socialLinks.map((social, index) => (
             <motion.a
               key={social.name}
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="aspect-square glass-morphism rounded-lg flex flex-col items-center justify-center gap-2 hover:scale-105 transition-all duration-300 group"
-              initial={{ opacity: 0, y: 20 }}
+              className="aspect-square glass-morphism rounded-xl flex flex-col items-center justify-center gap-3 hover:scale-110 transition-all duration-500 group border border-yellow-400/10 hover:border-yellow-400/30"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.5 + index * 0.1 }}
-              whileHover={{ y: -5 }}
+              transition={{ delay: 0.5 + index * 0.15 }}
+              whileHover={{ 
+                y: -8,
+                rotate: [0, 5, -5, 0],
+                boxShadow: '0 15px 30px rgba(251, 191, 36, 0.3)'
+              }}
             >
-              <div style={{ color: social.color }}>
+              <motion.div 
+                style={{ color: social.color }}
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
                 {social.icon}
-              </div>
-              <span className="text-xs font-inter text-gray-400 group-hover:text-white transition-colors duration-300">
+              </motion.div>
+              <span className="text-xs font-orbitron text-gray-300 group-hover:text-yellow-400 transition-colors duration-300 font-medium">
                 {social.name}
               </span>
             </motion.a>
@@ -339,19 +400,30 @@ function ContactInfo() {
 
       {/* Availability Status */}
       <motion.div
-        className="glass-morphism rounded-xl p-6 border border-neon-green/30"
+        className="glass-morphism rounded-2xl p-8 border border-yellow-400/30"
         initial={{ opacity: 0, scale: 0.8 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.6 }}
+        transition={{ duration: 1, delay: 0.6 }}
+        whileHover={{ 
+          scale: 1.02,
+          boxShadow: '0 20px 40px rgba(251, 191, 36, 0.2)'
+        }}
       >
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
-          <span className="font-space text-neon-green font-semibold">
+        <div className="flex items-center gap-4 mb-4">
+          <motion.div 
+            className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"
+            animate={{ 
+              scale: [1, 1.3, 1],
+              opacity: [1, 0.7, 1]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <span className="font-orbitron text-yellow-400 font-bold text-lg">
             Available for Work
           </span>
         </div>
-        <p className="font-inter text-gray-400 text-sm">
+        <p className="font-inter text-gray-300 text-sm leading-relaxed">
           I'm currently open to freelance projects, internships, and full-time opportunities. 
           Let's discuss how we can work together!
         </p>
@@ -375,19 +447,28 @@ export default function Contact() {
     <section 
       ref={sectionRef}
       id="contact" 
-      className="relative min-h-screen py-20 px-4 overflow-hidden"
+      className="relative min-h-screen py-24 px-4 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"
     >
-      {/* Background Effects */}
+      {/* Elegant Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-32 right-32 w-80 h-80 bg-neon-cyan/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-32 left-32 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        {/* Subtle gradient orbs */}
+        <div className="absolute top-32 right-32 w-96 h-96 bg-gradient-to-br from-yellow-400/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 left-32 w-80 h-80 bg-gradient-to-tr from-red-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '3s' }}></div>
         
-        {/* Animated Particles */}
+        {/* Elegant grid pattern */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="h-full w-full" style={{
+            backgroundImage: 'linear-gradient(to right, transparent 24%, rgba(250, 204, 21, 0.03) 25%, transparent 26%, transparent 74%, rgba(250, 204, 21, 0.03) 75%, transparent 76%)',
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+        
+        {/* Floating particles */}
         <div className="absolute inset-0">
           {Array.from({ length: 20 }).map((_, index) => (
             <motion.div
               key={index}
-              className="absolute w-1 h-1 bg-neon-cyan rounded-full"
+              className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`
@@ -398,7 +479,7 @@ export default function Contact() {
                 opacity: [0, 1, 0]
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 4 + Math.random() * 2,
                 repeat: Infinity,
                 delay: Math.random() * 2
               }}
@@ -411,50 +492,68 @@ export default function Contact() {
         className="max-w-7xl mx-auto relative z-10"
         style={{ y, opacity }}
       >
-        {/* Section Title */}
+        {/* Elegant Section Title */}
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
-          <h2 className="font-orbitron text-4xl md:text-6xl font-bold mb-4 text-gradient glow-text">
-            LET'S CONNECT
+          <div className="mb-6">
+            <span className="font-inter text-sm font-medium text-yellow-400/80 tracking-widest uppercase">
+              Get In Touch
+            </span>
+          </div>
+          <h2 className="font-orbitron text-5xl md:text-7xl font-black mb-6 tracking-wider">
+            <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent drop-shadow-2xl">
+              LET'S CONNECT
+            </span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-blue mx-auto rounded-full"></div>
-          <motion.p
-            className="font-inter text-gray-400 mt-6 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
+          <p className="font-inter text-gray-400 text-lg max-w-2xl mx-auto mb-8">
             Have a project in mind? Want to collaborate? Or just want to say hello? 
             I'd love to hear from you!
-          </motion.p>
+          </p>
+          <motion.div 
+            className="w-32 h-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mx-auto rounded-full shadow-lg shadow-yellow-400/50"
+            initial={{ width: 0, opacity: 0 }}
+            whileInView={{ width: 128, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+          />
         </motion.div>
 
         {/* Contact Content */}
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-16">
           <ContactForm />
           <ContactInfo />
         </div>
 
-        {/* Footer */}
+        {/* Elegant Footer */}
         <motion.div
-          className="text-center mt-16 pt-8 border-t border-gray-800"
+          className="text-center mt-20 pt-12 border-t border-yellow-400/20"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.8 }}
         >
-          <p className="font-inter text-gray-400 text-sm">
+          <motion.p
+            className="font-inter text-gray-300 text-sm mb-2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.9 }}
+          >
             © 2026 P. Maria Bala Akshay Raj. All rights reserved.
-          </p>
-          <p className="font-inter text-gray-500 text-xs mt-2">
-            Built with Next.js, TypeScript, and lots of ☕ :)
-          </p>
+          </motion.p>
+          <motion.p
+            className="font-inter text-gray-400 text-xs"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 1 }}
+          >
+            Built with Next.js, TypeScript, and lots of ☕ and 🎨
+          </motion.p>
         </motion.div>
       </motion.div>
     </section>
