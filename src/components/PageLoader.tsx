@@ -45,7 +45,11 @@ export default function PageLoader() {
       }
 
       if (newProgress >= 100) {
-        setTimeout(() => setIsLoading(false), 500);
+        setTimeout(() => {
+          setIsLoading(false);
+          // Add data attribute to signal loading completion
+          document.body.setAttribute('data-page-loaded', 'true');
+        }, 500);
       } else {
         requestAnimationFrame(updateProgress);
       }

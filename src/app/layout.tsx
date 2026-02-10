@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Space_Grotesk, Orbitron } from 'next/font/google'
 import './globals.css'
 import SmoothScroll from '@/components/SmoothScroll'
-import EnhancedNavigation from '@/components/EnhancedNavigation'
+import Navigation from '@/components/Navigation'
 import ScrollProgress from '@/components/ScrollProgress'
 import PageLoader from '@/components/PageLoader'
 
@@ -34,7 +34,7 @@ export default function RootLayout({
         <PageLoader />
         <SmoothScroll />
         <ScrollProgress />
-        <EnhancedNavigation />
+        <Navigation />
         {children}
       </body>
     </html>
